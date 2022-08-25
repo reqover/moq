@@ -40,7 +40,7 @@ export class MockController {
             ...mock.params
           },
           body: {
-            ...mock.request.body
+            ...body
           }
       }
 
