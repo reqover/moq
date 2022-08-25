@@ -8,6 +8,7 @@ class ProxyController {
     const serverId = req.params.serverId || 'default';
     const url = req.url;
     const method = req.method;
+    const body = req.body;
 
     const uuid = uuidv4();
     const result = JSON.stringify(
@@ -16,6 +17,7 @@ class ProxyController {
         request: {
           method,
           url,
+          body
         },
         response: {
           statusCode: 200,
@@ -31,7 +33,7 @@ class ProxyController {
 
     const dir = `${MOCKS_DIR}/${serverId}`;
     if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
+      fs.mkdirSync(dir, { recursive: true });
     }
     fs.writeFileSync(`${dir}/${uuid}.json`, result);
 
