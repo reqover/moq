@@ -35,7 +35,16 @@ export class MockController {
       const mock = mocksForPath[this.randInt(0, mocksForPath.length)];
       const statusCode = mock.response.statusCode
 
-      const mockResponse = await render(mock.response.body, mock.params);
+      const params = {
+          url: {
+            ...mock.params
+          },
+          body: {
+            ...mock.request.body
+          }
+      }
+
+      const mockResponse = await render(mock.response.body, params);
       console.log(`Mock response for ${method} ${url} (${statusCode})\n ${JSON.stringify(mockResponse, null, 2)}`);
 
       res.status(mock.response.statusCode).send(mockResponse);
