@@ -72,7 +72,7 @@ export default class ProxyService {
     const requestUrl = req.url;
     const requestMethod = req.method;
     const requestBody = req.body;
-    
+
     const responseStatusCode = res.statusCode;
     let responseBody = null;
     const response = responseBuffer.toString('utf8');
