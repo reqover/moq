@@ -15,10 +15,14 @@ export default class ProxyService {
   };
 
   private getProxytarget = async (serverId: string) => {
-    const configFile = `../../mocks/${serverId}/config.js`;
-    const { config } = await import(configFile);
-
-    return config.serverUrl;
+    const fileName = `mocks/${serverId}/config.js`
+    const configFilePath = `../../${fileName}`;
+    try {
+      const { config } = await import(configFilePath);
+      return config.serverUrl;
+    }catch(error){
+      throw Error(`Can not load config file ${fileName}`)
+    }
   };
 
   public createProxy = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
