@@ -1,9 +1,7 @@
 import { MOCKS_DIR } from '../config';
 import { NextFunction, Request, Response } from 'express';
 import fs from 'fs';
-
-import MockService from '@/services/mock.service';
-import { nextDay } from 'date-fns';
+import MockService from '../services/mock.service';
 
 export class MockController {
   public mockService = new MockService();

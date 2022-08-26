@@ -9,7 +9,7 @@ import { join } from 'path';
 
 export default class ProxyService {
   public createProxy = async (serverId, url) => {
-    const configDir: string = join(__dirname, '..', '..', 'mocks', serverId);
+    const configDir: string = join('/tmp', 'mocks', serverId);
     const fileName = `config.js`
     const configFilePath = join(configDir, fileName);
 
@@ -33,13 +33,12 @@ export default class ProxyService {
   };
 
   private getProxytarget = async (serverId: string) => {
-    const fileName = `mocks/${serverId}/config.js`
-    const configFilePath = `../../${fileName}`;
+    const file = `/tmp/mocks/${serverId}/config.js`
     try {
-      const { config } = await import(configFilePath);
+      const { config } = await import(file);
       return config.serverUrl;
     }catch(error){
-      throw Error(`Can not load config file ${fileName}`)
+      throw Error(`Can not load config file ${file}`)
     }
   };
 
