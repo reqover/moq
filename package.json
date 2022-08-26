@@ -12,7 +12,7 @@
     "lint": "eslint --ignore-path .gitignore --ext .ts src/",
     "lint:fix": "npm run lint -- --fix",
     "minify": "npx javascript-obfuscator build -o ./dist",
-    "prod": "cross-env PORT=3000 NODE_ENV=production node dist/server.js"
+    "prod": "cross-env NODE_ENV=production node dist/server.js"
   },
   "dependencies": {
     "@faker-js/faker": "^7.4.0",

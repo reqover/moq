@@ -20,6 +20,8 @@ WORKDIR /usr/src/app
 COPY package.json ./
 
 RUN npm install --only=prod
+RUN npm install -g cross-env
+
 COPY --from=0 /usr/src/app/dist ./dist
 
 EXPOSE 3000
