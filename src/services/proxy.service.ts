@@ -14,8 +14,8 @@ export default class ProxyService {
     const configFilePath = join(configDir, fileName);
 
     const data = `exports.config = {
-      serverUrl: "${url}"
-    }
+    serverUrl: "${url}"
+}
     `
     if (!fs.existsSync(configDir)) {
       fs.mkdirSync(configDir, { recursive: true });
