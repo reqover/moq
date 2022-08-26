@@ -1,10 +1,10 @@
 import { MOCKS_DIR } from '@/config';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 
 class ProxyController {
-  public proxyApi = (req: Request, res: Response, next: NextFunction): void => {
+  public proxyApi = (req: Request, res: Response): void => {
     const serverId = req.params.serverId || 'default';
     const url = req.url;
     const method = req.method;
@@ -17,7 +17,7 @@ class ProxyController {
         request: {
           method,
           url,
-          body
+          body,
         },
         response: {
           statusCode: 200,
