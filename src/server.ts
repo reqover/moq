@@ -1,4 +1,4 @@
-import App from '@/app';
+import App from './app';
 import IndexRoute from '@routes/index.route';
 import validateEnv from '@utils/validateEnv';
 import { MockRoute } from './routes/mock.route';
