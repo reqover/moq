@@ -5,8 +5,26 @@ import querystring from 'querystring';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import { MOCKS_DIR } from '../config';
+import { join } from 'path';
 
 export default class ProxyService {
+  public createProxy = async (serverId, url) => {
+    const configDir: string = join(__dirname, '..', '..', 'mocks', serverId);
+    const fileName = `config.js`
+    const configFilePath = join(configDir, fileName);
+
+    const data = `exports.config = {
+      serverUrl: "${url}"
+    }
+    `
+    if (!fs.existsSync(configDir)) {
+      fs.mkdirSync(configDir, { recursive: true });
+    }
+
+    await fs.writeFileSync(configFilePath, data)
+    return {status: "created"}
+  }
+
   private filter = (pathname, req) => {
     if (pathname == '/favicon.ico') {
       return false;
@@ -25,7 +43,7 @@ export default class ProxyService {
     }
   };
 
-  public createProxy = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public proxy = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const serverId = req.params.serverId;
     const serviceUrl = await this.getProxytarget(serverId);
     const middleware = createProxyMiddleware(this.filter, {

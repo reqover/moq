@@ -13,3 +13,12 @@ exports.config = {
     serverUrl: 'https://petstore.swagger.io'
 }
 `
+
+`
+curl --location --request POST 'http://localhost:3000/proxy' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "petstore",
+    "url": "https://petstore.swagger.io"
+}'
+`
