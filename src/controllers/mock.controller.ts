@@ -19,7 +19,7 @@ export class MockController {
       const mock = JSON.parse(rawdata);
       const urlMatchingResult = this.matchPath(mock.request.url, url);
 
-      if (Object.keys(body).length > 0) {
+      if (body) {
         const isBodyMatch = this.bodyMatch(body, mock.request.body);
         if (!isBodyMatch) {
           return;
