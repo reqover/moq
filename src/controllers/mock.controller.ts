@@ -69,4 +69,17 @@ export class MockController {
   private randInt = (from: number, to: number) => {
     return Math.floor(Math.random() * to) + from;
   };
+
+  public getMocskApi = async (req: Request, res: Response): Promise<void> => {
+    const serverId = req.params.serverId || 'default';
+    const dir = `${MOCKS_DIR}/${serverId}`;
+    const mocks = []
+    fs.readdirSync(dir).forEach(file => {
+      const rawdata = fs.readFileSync(`${dir}/${file}`) as any;
+      const mock = JSON.parse(rawdata);
+      mocks.push(mock);
+    });
+
+    res.send(mocks);
+  }
 }

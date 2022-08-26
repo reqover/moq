@@ -12,5 +12,6 @@ export class MockRoute implements Routes {
 
   private initializeRoutes() {
     this.router.use('/:serverId/mock', this.controller.mockApi);
+    this.router.get('/:serverId/mocks', this.controller.getMocskApi);
   }
 }
