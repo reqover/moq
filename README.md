@@ -4,7 +4,7 @@ Run
 
 `
 docker run -p 3000:3000 \
-    -v $PWD/mocks:/usr/src/app/mocks
+    -v $PWD/mocks:/tmp/mocks
     reqover/moq
 `
 
