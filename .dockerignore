@@ -1,7 +1,9 @@
 # compiled output
 .vscode
 /node_modules
-
+/data
+/mocks
+.github
 # code formatter
 .eslintrc
 .eslintignore
