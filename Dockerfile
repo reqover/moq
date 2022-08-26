@@ -1,5 +1,5 @@
 # Common build stage
-FROM node:14.20.0-alpine3.16
+FROM node:14.14.0-alpine3.12
 
 WORKDIR /usr/src/app
 COPY package.json ./
@@ -11,7 +11,7 @@ RUN npm run build
 RUN npm run minify
 
 
-FROM node:14.20.0-alpine3.16
+FROM node:14.14.0-alpine3.12
 
 ENV NODE_ENV production
 
