@@ -19,7 +19,7 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 
-RUN npm ci --only=production
+RUN npm install --only=prod
 COPY --from=0 /usr/src/app/dist ./dist
 
 EXPOSE 3000
