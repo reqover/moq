@@ -1,5 +1,6 @@
 import ProxyService from '../services/proxy.service';
 import { NextFunction, Request, Response } from 'express';
+import { PORT } from '../config';
 
 export default class ProxyController {
   public proxyService = new ProxyService();
@@ -18,7 +19,10 @@ export default class ProxyController {
       const serverId = req.body.name;
       const url = req.body.url; 
       const result = await this.proxyService.createProxy(serverId, url);
-      res.send(result);
+
+      const proxyUrl = `${req.protocol}://${req.hostname}:${PORT}/${serverId}${req.path}`
+
+      res.send({...result, proxyUrl});
     } catch (error) {
       next(error);
     }

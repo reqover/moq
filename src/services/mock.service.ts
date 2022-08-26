@@ -4,6 +4,7 @@ import fs from 'fs';
 import { match as pathMatcher } from 'path-to-regexp';
 import match from 'match-json';
 import { render } from '../services/template.service';
+import { logger } from '../utils/logger';
 
 export default class MockService {
   public findMock = async (req: Request, res: Response) => {
@@ -45,10 +46,10 @@ export default class MockService {
       };
 
       const mockResponse = await render(mock.response.body, params);
-      console.log(`Mock response for ${method} ${url} (${statusCode})\n ${JSON.stringify(mockResponse, null, 2)}`);
-
+      logger.info(`Mock response for ${method} ${url} (${statusCode})\n ${JSON.stringify(mockResponse, null, 2)}`);
       res.status(mock.response.statusCode).send(mockResponse);
     } else {
+      logger.info(`Mock is NOT FOUND for ${method} ${url}`)
       res.status(404).send({
         status: 'Mock not found',
         request: { method, url, body },
