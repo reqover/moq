@@ -13,7 +13,7 @@ export class MockController {
     const body = req.body;
     const mocksForPath = [];
 
-    const dir = `${MOCKS_DIR}/${serverId}`;
+    const dir = `${MOCKS_DIR}/${serverId}/mappings`;
     fs.readdirSync(dir).forEach(file => {
       const rawdata = fs.readFileSync(`${dir}/${file}`) as any;
       const mock = JSON.parse(rawdata);
@@ -73,7 +73,7 @@ export class MockController {
   public getMocskApi = async (req: Request, res: Response): Promise<void> => {
     const serverId = req.params.serverId || 'default';
     const dir = `${MOCKS_DIR}/${serverId}`;
-    const mocks = []
+    const mocks = [];
     fs.readdirSync(dir).forEach(file => {
       const rawdata = fs.readFileSync(`${dir}/${file}`) as any;
       const mock = JSON.parse(rawdata);
@@ -81,5 +81,5 @@ export class MockController {
     });
 
     res.send(mocks);
-  }
+  };
 }

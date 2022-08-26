@@ -1,44 +1,11 @@
-import { MOCKS_DIR } from '@/config';
-import { Request, Response } from 'express';
-import fs from 'fs';
-import { v4 as uuidv4 } from 'uuid';
+import ProxyService from '@/services/proxy.service';
+import { NextFunction, Request, Response } from 'express';
 
-class ProxyController {
-  public proxyApi = (req: Request, res: Response): void => {
-    const serverId = req.params.serverId || 'default';
-    const url = req.url;
-    const method = req.method;
-    const body = req.body;
+export default class ProxyController {
+  public proxyService = new ProxyService();
 
-    const uuid = uuidv4();
-    const result = JSON.stringify(
-      {
-        id: uuid,
-        request: {
-          method,
-          url,
-          body,
-        },
-        response: {
-          statusCode: 200,
-          body: {
-            id: 1,
-            name: 'Mock',
-          },
-        },
-      },
-      null,
-      4,
-    );
-
-    const dir = `${MOCKS_DIR}/${serverId}`;
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    fs.writeFileSync(`${dir}/${uuid}.json`, result);
-
-    res.send('ok');
+  public proxyApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const result = await this.proxyService.createProxy(req, res, next);
+    return result;
   };
 }
-
-export default ProxyController;
