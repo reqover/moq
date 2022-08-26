@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { createProxyMiddleware, responseInterceptor } from 'http-proxy-middleware';
-import { logger } from '@utils/logger';
+import { logger } from '../utils/logger';
 import querystring from 'querystring';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
-import { MOCKS_DIR } from '@/config';
+import { MOCKS_DIR } from '../config';
 
 export default class ProxyService {
   private filter = (pathname, req) => {

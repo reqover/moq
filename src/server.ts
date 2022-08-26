@@ -1,6 +1,6 @@
 import App from './app';
-import IndexRoute from '@routes/index.route';
-import validateEnv from '@utils/validateEnv';
+import IndexRoute from './routes/index.route';
+import validateEnv from './utils/validateEnv';
 import { MockRoute } from './routes/mock.route';
 import { ProxyRoute } from './routes/proxy.route';
 

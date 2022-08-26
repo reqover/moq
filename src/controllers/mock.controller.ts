@@ -1,5 +1,5 @@
-import { MOCKS_DIR } from '@/config';
-import { render } from '@/services/template.service';
+import { MOCKS_DIR } from '../config';
+import { render } from '../services/template.service';
 import { Request, Response } from 'express';
 import fs from 'fs';
 import { match as pathMatcher } from 'path-to-regexp';

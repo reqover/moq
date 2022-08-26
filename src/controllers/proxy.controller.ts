@@ -1,4 +1,4 @@
-import ProxyService from '@/services/proxy.service';
+import ProxyService from '../services/proxy.service';
 import { NextFunction, Request, Response } from 'express';
 
 export default class ProxyController {
