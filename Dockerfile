@@ -24,4 +24,4 @@ COPY --from=0 /usr/src/app/dist ./dist
 
 EXPOSE 3000
 
-CMD ["npm", "run", "prod"]
+CMD npm run prod
