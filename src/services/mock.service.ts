@@ -1,13 +1,26 @@
-import { MOCKS_DIR } from '../config';
 import { Request, Response } from 'express';
 import fs from 'fs';
-import { match as pathMatcher } from 'path-to-regexp';
-import match from 'match-json';
+
 import { render } from '../services/template.service';
 import { logger } from '../utils/logger';
-import glob from 'fast-glob';
+import { bodyMatch, getFiles, mappingsDir, matchPath, randInt } from '../utils/util';
 
 export default class MockService {
+  public getMocks(serverId: string) {
+    const dir = mappingsDir(serverId);
+    const mocks = [];
+    getFiles(dir).forEach(file => {
+      try {
+        const rawdata = fs.readFileSync(file) as any;
+        const mock = JSON.parse(rawdata);
+        mocks.push(mock);
+      } catch (error) {
+        throw Error(`Can not read file ${file}`);
+      }
+    });
+    return mocks;
+  }
+
   public findMock = async (req: Request, res: Response) => {
     const serverId = req.params.serverId || 'default';
     const url = req.url;
@@ -15,14 +28,14 @@ export default class MockService {
     const body = req.body;
     const mocksForPath = [];
 
-    const dir = `${MOCKS_DIR}/${serverId}/mappings`;
-    this.getFiles(dir).forEach(file => {
+    const dir = mappingsDir(serverId);
+    getFiles(dir).forEach(file => {
       const rawdata = fs.readFileSync(file) as any;
       const mock = JSON.parse(rawdata);
-      const urlMatchingResult = this.matchPath(mock.request.url, url);
+      const urlMatchingResult = matchPath(mock.request.url, url);
 
       if (body) {
-        const isBodyMatch = this.bodyMatch(body, mock.request.body);
+        const isBodyMatch = bodyMatch(body, mock.request.body);
         if (!isBodyMatch) {
           return;
         }
@@ -34,7 +47,7 @@ export default class MockService {
     });
 
     if (mocksForPath.length > 0) {
-      const mock = mocksForPath[this.randInt(0, mocksForPath.length)];
+      const mock = mocksForPath[randInt(0, mocksForPath.length)];
       const statusCode = mock.response.statusCode;
 
       const params = {
@@ -50,28 +63,11 @@ export default class MockService {
       logger.info(`Mock response for ${method} ${url} (${statusCode})\n ${JSON.stringify(mockResponse, null, 2)}`);
       res.status(mock.response.statusCode).send(mockResponse);
     } else {
-      logger.info(`Mock is NOT FOUND for ${method} ${url}`)
+      logger.info(`Mock is NOT FOUND for ${method} ${url}`);
       res.status(404).send({
         status: 'Mock not found',
         request: { method, url, body },
       });
     }
-  };
-
-  private getFiles = (dir) => {
-    return glob.sync([`${dir}/**/*.json`]);
-  }
-
-  private matchPath = (pattern, path) => {
-    const matchFunction = pathMatcher(pattern.replace('?', '\\?'));
-    return matchFunction(path);
-  };
-
-  private bodyMatch = (body, pattern) => {
-    return match(body, pattern);
-  };
-
-  private randInt = (from: number, to: number) => {
-    return Math.floor(Math.random() * to) + from;
   };
 }

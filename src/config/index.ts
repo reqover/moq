@@ -2,7 +2,6 @@ import { config } from 'dotenv';
 const { dirname, join } = require('path');
 config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
 
-
 const APP_DIR = join(dirname(require.main.filename), '..', 'mocks');
 export const CREDENTIALS = process.env.CREDENTIALS === 'true';
 export const { NODE_ENV } = process.env;

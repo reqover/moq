@@ -17,14 +17,14 @@ export default class ProxyController {
   public createProxy = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const serverId = req.body.name;
-      const url = req.body.url; 
+      const url = req.body.url;
       const result = await this.proxyService.createProxy(serverId, url);
 
-      const proxyUrl = `${req.protocol}://${req.hostname}:${PORT}/${serverId}${req.path}`
+      const proxyUrl = `${req.protocol}://${req.hostname}:${PORT}/${serverId}${req.path}`;
 
-      res.send({...result, proxyUrl});
+      res.send({ ...result, proxyUrl });
     } catch (error) {
       next(error);
     }
-  }
+  };
 }

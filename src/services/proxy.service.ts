@@ -6,24 +6,25 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import { MOCKS_DIR } from '../config';
 import { join } from 'path';
+import { mappingsDir } from '../utils/util';
 
 export default class ProxyService {
   public createProxy = async (serverId, url) => {
     const configDir: string = join('/tmp', 'mocks', serverId);
-    const fileName = `config.js`
+    const fileName = `config.js`;
     const configFilePath = join(configDir, fileName);
 
     const data = `exports.config = {
     serverUrl: "${url}"
 }
-    `
+    `;
     if (!fs.existsSync(configDir)) {
       fs.mkdirSync(configDir, { recursive: true });
     }
 
-    await fs.writeFileSync(configFilePath, data)
-    return {status: "created"}
-  }
+    await fs.writeFileSync(configFilePath, data);
+    return { status: 'created' };
+  };
 
   private filter = (pathname, req) => {
     if (pathname == '/favicon.ico') {
@@ -33,12 +34,12 @@ export default class ProxyService {
   };
 
   private getProxytarget = async (serverId: string) => {
-    const file = `${MOCKS_DIR}/${serverId}/config.js`
+    const file = `${MOCKS_DIR}/${serverId}/config.js`;
     try {
       const { config } = await import(file);
       return config.serverUrl;
-    }catch(error){
-      throw Error(`Can not load config file ${file}`)
+    } catch (error) {
+      throw Error(`Can not load config file ${file}`);
     }
   };
 
@@ -121,11 +122,11 @@ export default class ProxyService {
       4,
     );
 
-    const dir = `${MOCKS_DIR}/${serverId}/mappings`;
+    const dir = mappingsDir(serverId);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    const fileName = `${dir}/${uuid}.json`
+    const fileName = `${dir}/${uuid}.json`;
     fs.writeFileSync(fileName, result);
     logger.info(`Proxy result is saved: ${fileName}`);
     return response;

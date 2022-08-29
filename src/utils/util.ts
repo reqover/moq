@@ -1,3 +1,8 @@
+import { MOCKS_DIR } from '../config';
+import glob from 'fast-glob';
+import { match as pathMatcher } from 'path-to-regexp';
+import match from 'match-json';
+
 /**
  * @method isEmpty
  * @param {String | Number | Object} value
@@ -16,4 +21,25 @@ export const isEmpty = (value: string | number | object): boolean => {
   } else {
     return false;
   }
+};
+
+export const getFiles = dir => {
+  return glob.sync([`${dir}/**/*.json`]);
+};
+
+export const mappingsDir = serverId => {
+  return `${MOCKS_DIR}/${serverId}/mappings`;
+};
+
+export const matchPath = (pattern, path) => {
+  const matchFunction = pathMatcher(pattern.replace('?', '\\?'));
+  return matchFunction(path);
+};
+
+export const bodyMatch = (body, pattern) => {
+  return match(body, pattern);
+};
+
+export const randInt = (from: number, to: number) => {
+  return Math.floor(Math.random() * to) + from;
 };
