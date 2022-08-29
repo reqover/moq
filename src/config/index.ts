@@ -1,9 +1,12 @@
 import { config } from 'dotenv';
 config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
 
+const { dirname, join } = require('path');
+const APP_DIR = join(dirname(require.main.filename), '..', 'mocks');
+
 export const CREDENTIALS = process.env.CREDENTIALS === 'true';
 export const { NODE_ENV } = process.env;
-export const MOCKS_DIR = '/tmp/mocks';
+export const MOCKS_DIR = process.env.MOCKS_DIR || APP_DIR;
 export const PORT = process.env.PORT || 3000;
 export const LOG_DIR = '../../logs';
 export const LOG_FORMAT = 'combined';

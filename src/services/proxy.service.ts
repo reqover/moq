@@ -33,7 +33,7 @@ export default class ProxyService {
   };
 
   private getProxytarget = async (serverId: string) => {
-    const file = `/tmp/mocks/${serverId}/config.js`
+    const file = `${MOCKS_DIR}/${serverId}/config.js`
     try {
       const { config } = await import(file);
       return config.serverUrl;
@@ -125,8 +125,9 @@ export default class ProxyService {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    fs.writeFileSync(`${dir}/${uuid}.json`, result);
-
+    const fileName = `${dir}/${uuid}.json`
+    fs.writeFileSync(fileName, result);
+    logger.info(`Proxy result is saved: ${fileName}`);
     return response;
   };
 }
