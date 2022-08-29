@@ -5,6 +5,7 @@ import { match as pathMatcher } from 'path-to-regexp';
 import match from 'match-json';
 import { render } from '../services/template.service';
 import { logger } from '../utils/logger';
+import glob from 'fast-glob';
 
 export default class MockService {
   public findMock = async (req: Request, res: Response) => {
@@ -15,8 +16,8 @@ export default class MockService {
     const mocksForPath = [];
 
     const dir = `${MOCKS_DIR}/${serverId}/mappings`;
-    fs.readdirSync(dir).forEach(file => {
-      const rawdata = fs.readFileSync(`${dir}/${file}`) as any;
+    this.getFiles(dir).forEach(file => {
+      const rawdata = fs.readFileSync(file) as any;
       const mock = JSON.parse(rawdata);
       const urlMatchingResult = this.matchPath(mock.request.url, url);
 
@@ -56,6 +57,10 @@ export default class MockService {
       });
     }
   };
+
+  private getFiles = (dir) => {
+    return glob.sync([`${dir}/**/*.json`]);
+  }
 
   private matchPath = (pattern, path) => {
     const matchFunction = pathMatcher(pattern.replace('?', '\\?'));
