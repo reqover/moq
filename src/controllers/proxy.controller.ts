@@ -24,15 +24,24 @@ export default class ProxyController {
     }
   };
 
-  public createProxy = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public createProxyApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const serverId = req.body.name;
       const url = req.body.url;
       const result = await this.proxyService.createProxy(serverId, url);
-
       const proxyUrl = `${req.protocol}://${req.hostname}:${PORT}/${serverId}${req.path}`;
-
       res.send({ ...result, proxyUrl });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public recordingApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const serverId = req.params.serverId;
+      const status = req.body;
+      const result = await this.proxyService.recording(serverId, status);
+      res.send(result);
     } catch (error) {
       next(error);
     }

@@ -5,25 +5,30 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import { PROXY_PATH } from '../config';
 import { join } from 'path';
-import { mappingsDir, proxyRootDir } from '../utils/util';
+import { getProxyConfig, mappingsDir, proxyRootDir } from '../utils/util';
 import md5 from 'md5';
 
 export default class ProxyService {
   public createProxy = async (serverId, url) => {
+    const data = {
+      serverUrl: url,
+      proxy: true,
+    };
+
+    this.saveConfig(serverId, data);
+    return { status: 'created' };
+  };
+
+  private saveConfig = async (serverId, data) => {
     const configDir: string = proxyRootDir(serverId);
     const fileName = `config.json`;
     const configFilePath = join(configDir, fileName);
-
-    const data = {
-      serverUrl: url,
-    };
 
     if (!fs.existsSync(configDir)) {
       fs.mkdirSync(configDir, { recursive: true });
     }
 
     await fs.writeFileSync(configFilePath, JSON.stringify(data, null, 2));
-    return { status: 'created' };
   };
 
   public proxy = async config => {
@@ -127,5 +132,12 @@ export default class ProxyService {
     const data = `${method}#${url}#${JSON.stringify(body)}`;
     const hash = md5(data);
     return hash;
+  };
+
+  public recording = async (serverId, status: any) => {
+    const config = await getProxyConfig(serverId);
+    const result = { ...config, ...status };
+    this.saveConfig(serverId, result);
+    return { config: { ...result } };
   };
 }
