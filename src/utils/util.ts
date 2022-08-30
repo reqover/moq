@@ -41,11 +41,11 @@ export const matchPath = (pattern, path) => {
 };
 
 export const bodyMatch = (body, pattern) => {
-  if(pattern.partial) {
+  if (pattern.partial) {
     return match.partial(body, pattern.partial);
-  } 
+  }
 
-  return match(body, pattern.match);
+  return match(body, pattern.equalTo);
 };
 
 export const randInt = (from: number, to: number) => {

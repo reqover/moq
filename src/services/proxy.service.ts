@@ -16,7 +16,7 @@ export default class ProxyService {
     const configFilePath = join(configDir, fileName);
 
     const data = {
-      serverUrl: url
+      serverUrl: url,
     };
 
     if (!fs.existsSync(configDir)) {
@@ -113,7 +113,11 @@ export default class ProxyService {
         request: {
           method: requestMethod,
           url: requestUrl,
-          body: requestBody,
+          body: {
+            equalTo: {
+              requestBody,
+            },
+          },
         },
         response: {
           statusCode: responseStatusCode,
@@ -137,8 +141,8 @@ export default class ProxyService {
   };
 
   private getHash = (method, url, body) => {
-    const data = `${method}#${url}#${JSON.stringify(body)}`
-    const hash =  md5(data);
+    const data = `${method}#${url}#${JSON.stringify(body)}`;
+    const hash = md5(data);
     return hash;
-  }
+  };
 }
