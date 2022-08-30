@@ -11,7 +11,7 @@ import md5 from 'md5';
 
 export default class ProxyService {
   public createProxy = async (serverId, url) => {
-    const configDir: string = join('/tmp', 'mocks', serverId);
+    const configDir: string = mappingsDir(serverId);
     const fileName = `config.json`;
     const configFilePath = join(configDir, fileName);
 
@@ -23,7 +23,7 @@ export default class ProxyService {
       fs.mkdirSync(configDir, { recursive: true });
     }
 
-    await fs.writeFileSync(configFilePath, JSON.stringify(data));
+    await fs.writeFileSync(configFilePath, JSON.stringify(data, null, 2));
     return { status: 'created' };
   };
 
