@@ -3,6 +3,7 @@ import glob from 'fast-glob';
 import { match as pathMatcher } from 'path-to-regexp';
 import match from 'match-json';
 import fs from 'fs';
+import md5 from 'md5';
 
 /**
  * @method isEmpty
@@ -62,4 +63,10 @@ export const getProxyConfig = async (serverId: string) => {
   } catch (error) {
     throw Error(`Can not load config file ${file}`);
   }
+};
+
+export const getHash = (method, url, body) => {
+  const data = `${method}#${url}#${JSON.stringify(body)}`;
+  const hash = md5(data);
+  return hash;
 };

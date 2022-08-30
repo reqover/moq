@@ -5,8 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import { PROXY_PATH } from '../config';
 import { join } from 'path';
-import { getProxyConfig, mappingsDir, proxyRootDir } from '../utils/util';
-import md5 from 'md5';
+import { getHash, getProxyConfig, mappingsDir, proxyRootDir } from '../utils/util';
 
 export default class ProxyService {
   public createProxy = async (serverId, url) => {
@@ -88,7 +87,7 @@ export default class ProxyService {
     }
 
     const uuid = uuidv4();
-    const hash = this.getHash(requestMethod, requestUrl, requestBody);
+    const hash = getHash(requestMethod, requestUrl, requestBody);
     const result = JSON.stringify(
       {
         id: uuid,
@@ -126,12 +125,6 @@ export default class ProxyService {
 
   private pathToFolders = (path: string) => {
     return join(...path.split('/'));
-  };
-
-  private getHash = (method, url, body) => {
-    const data = `${method}#${url}#${JSON.stringify(body)}`;
-    const hash = md5(data);
-    return hash;
   };
 
   public recording = async (serverId, status: any) => {
