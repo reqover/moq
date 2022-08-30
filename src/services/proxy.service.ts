@@ -105,7 +105,7 @@ export default class ProxyService {
     }
 
     const uuid = uuidv4();
-    const hash =  md5(requestUrl);
+    const hash = this.getHash(requestMethod, requestUrl, requestBody);
     const result = JSON.stringify(
       {
         id: uuid,
@@ -135,4 +135,10 @@ export default class ProxyService {
     logger.info(`Proxy result is saved: ${fileName}`);
     return response;
   };
+
+  private getHash = (method, url, body) => {
+    const data = `${method}#${url}#${JSON.stringify(body)}`
+    const hash =  md5(data);
+    return hash;
+  }
 }
