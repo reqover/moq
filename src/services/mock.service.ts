@@ -59,9 +59,7 @@ export default class MockService {
       };
 
       const mockResponse = await render(mock.response.body, params);
-      logger.info(`======= Mock ${mock.hash} response for ${method} ${url} (${statusCode}) =======
-       ${JSON.stringify(mockResponse, null, 2)}`);
-      logger.info(`======= Mock ${mock.hash} ======`);
+      this.logMockResponse(mock, method, url, statusCode, mockResponse)
       res.status(mock.response.statusCode).send(mockResponse);
     } else {
       logger.info(`Mock is NOT FOUND for ${method} ${url}`);
@@ -71,4 +69,11 @@ export default class MockService {
       });
     }
   };
+
+  private logMockResponse = (mock, method, url, statusCode, mockResponse) => {
+    logger.info(`======= Mock ${mock.hash} =======
+Response for [${method}] ${url} (${statusCode}) \n
+${JSON.stringify(mockResponse, null, 2)}\n`);
+    logger.info(`======= Mock ${mock.hash} ======`);
+  }
 }
