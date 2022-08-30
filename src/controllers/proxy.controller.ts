@@ -2,17 +2,23 @@ import ProxyService from '../services/proxy.service';
 import { NextFunction, Request, Response } from 'express';
 import { PORT } from '../config';
 import { getProxyConfig } from '../utils/util';
+import MockService from '../services/mock.service';
 
 export default class ProxyController {
   public proxyService = new ProxyService();
+  public mockService = new MockService();
 
   public proxyApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const serverId = req.params.serverId;
       const config = await getProxyConfig(serverId);
-      const middleware = await this.proxyService.proxy(config);
-      const result = await middleware(req, res, next);
-      return result;
+      if (!config.proxy) {
+        res.send(await this.mockService.findMock(req, res));
+      } else {
+        const middleware = await this.proxyService.proxy(config);
+        const result = await middleware(req, res, next);
+        return result;
+      }
     } catch (error) {
       next(error);
     }
