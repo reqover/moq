@@ -115,7 +115,7 @@ export default class ProxyService {
           url: requestUrl,
           body: {
             equalTo: {
-              requestBody,
+              ...requestBody,
             },
           },
         },
