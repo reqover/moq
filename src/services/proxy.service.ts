@@ -6,12 +6,12 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import { MOCKS_DIR } from '../config';
 import { join } from 'path';
-import { mappingsDir } from '../utils/util';
+import { mappingsDir, proxyRootDir } from '../utils/util';
 import md5 from 'md5';
 
 export default class ProxyService {
   public createProxy = async (serverId, url) => {
-    const configDir: string = mappingsDir(serverId);
+    const configDir: string = proxyRootDir(serverId);
     const fileName = `config.json`;
     const configFilePath = join(configDir, fileName);
 

@@ -31,13 +31,21 @@ export const mappingsDir = serverId => {
   return `${MOCKS_DIR}/${serverId}/mappings`;
 };
 
+export const proxyRootDir = serverId => {
+  return `${MOCKS_DIR}/${serverId}`;
+};
+
 export const matchPath = (pattern, path) => {
   const matchFunction = pathMatcher(pattern.replace('?', '\\?'));
   return matchFunction(path);
 };
 
 export const bodyMatch = (body, pattern) => {
-  return match(body, pattern);
+  if(pattern.partial) {
+    return match.partial(body, pattern.partial);
+  } 
+
+  return match(body, pattern.match);
 };
 
 export const randInt = (from: number, to: number) => {
