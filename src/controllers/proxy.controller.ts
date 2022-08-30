@@ -5,6 +5,7 @@ import { getProxyConfig } from '../utils/util';
 import MockService from '../services/mock.service';
 
 export default class ProxyController {
+  
   public proxyService = new ProxyService();
   public mockService = new MockService();
 
@@ -46,4 +47,14 @@ export default class ProxyController {
       next(error);
     }
   };
+
+  public getConfigApi = async (req: Request, res: Response, next: NextFunction) : Promise<void>=> {
+    try {
+      const serverId = req.params.serverId;
+      const config = await getProxyConfig(serverId);
+      res.send(config);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

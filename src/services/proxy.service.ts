@@ -138,6 +138,6 @@ export default class ProxyService {
     const config = await getProxyConfig(serverId);
     const result = { ...config, ...status };
     this.saveConfig(serverId, result);
-    return { config: { ...result } };
+    return result;
   };
 }
