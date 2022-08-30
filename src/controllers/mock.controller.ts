@@ -26,32 +26,36 @@ export class MockController {
   };
 
   public downloadMocks(req: Request, res: Response, next: NextFunction) {
-    const serverId = req.params.serverId || 'default';
-    const archive = archiver('zip');
+    try {
+      const serverId = req.params.serverId || 'default';
+      const archive = archiver('zip');
 
-    archive.on('error', function (err) {
-      res.status(500).send({ error: err.message });
-    });
+      archive.on('error', function (err) {
+        res.status(500).send({ error: err.message });
+      });
 
-    //on stream closed we can end the request
-    archive.on('end', function () {
-      console.log('Archive wrote %d bytes', archive.pointer());
-    });
+      //on stream closed we can end the request
+      archive.on('end', function () {
+        console.log('Archive wrote %d bytes', archive.pointer());
+      });
 
-    //set the archive name
-    res.attachment(`${serverId}.zip`);
+      //set the archive name
+      res.attachment(`${serverId}.zip`);
 
-    //this is the streaming magic
-    archive.pipe(res);
+      //this is the streaming magic
+      archive.pipe(res);
 
-    const dir = mappingsDir(serverId);
+      const dir = mappingsDir(serverId);
 
-    const files = getFiles(dir);
+      const files = getFiles(dir);
 
-    for (const i in files) {
-      archive.file(files[i], { name: path.basename(files[i]) });
+      for (const i in files) {
+        archive.file(files[i], { name: path.basename(files[i]) });
+      }
+
+      archive.finalize();
+    } catch (error) {
+      next(error);
     }
-
-    archive.finalize();
   }
 }

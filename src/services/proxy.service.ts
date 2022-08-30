@@ -1,10 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
 import { createProxyMiddleware, responseInterceptor } from 'http-proxy-middleware';
 import { logger } from '../utils/logger';
 import querystring from 'querystring';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
-import { MOCKS_DIR } from '../config';
+import { PROXY_PATH } from '../config';
 import { join } from 'path';
 import { mappingsDir, proxyRootDir } from '../utils/util';
 import md5 from 'md5';
@@ -27,46 +26,25 @@ export default class ProxyService {
     return { status: 'created' };
   };
 
-  private filter = (pathname, req) => {
-    if (pathname == '/favicon.ico') {
-      return false;
-    }
-    return true;
-  };
-
-  private getProxytarget = async (serverId: string) => {
-    const file = `${MOCKS_DIR}/${serverId}/config.json`;
-    try {
-      const content = fs.readFileSync(file, 'utf8');
-      const config = JSON.parse(content);
-      return config.serverUrl;
-    } catch (error) {
-      throw Error(`Can not load config file ${file}`);
-    }
-  };
-
-  public proxy = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const serverId = req.params.serverId;
-    const serviceUrl = await this.getProxytarget(serverId);
-    const middleware = createProxyMiddleware(this.filter, {
-      target: serviceUrl,
+  public proxy = async config => {
+    const serverUrl = config.serverUrl;
+    return createProxyMiddleware({
+      target: serverUrl,
       secure: false,
       changeOrigin: true,
       selfHandleResponse: true,
       pathRewrite: {
-        ['^/(.*?)/proxy']: '',
+        [`^/(.*?)${PROXY_PATH}`]: '',
       },
       onProxyReq: this.proxyReq,
       onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req: any, res) => {
         return this.proxyRes(responseBuffer, proxyRes, req, res);
       }),
-      router: req => {
-        logger.info(`Router target ${serviceUrl}`);
-        return serviceUrl;
+      router: () => {
+        logger.info(`Router target ${serverUrl}`);
+        return serverUrl;
       },
     });
-    const result = await middleware(req, res, next);
-    return result;
   };
 
   private proxyReq = (proxyReq, req) => {
@@ -130,7 +108,8 @@ export default class ProxyService {
       4,
     );
 
-    const dir = mappingsDir(serverId);
+    const folders = this.pathToFolders(req.path);
+    const dir = join(mappingsDir(serverId), folders);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
@@ -138,6 +117,10 @@ export default class ProxyService {
     fs.writeFileSync(fileName, result);
     logger.info(`Proxy result is saved: ${fileName}`);
     return response;
+  };
+
+  private pathToFolders = (path: string) => {
+    return join(...path.split('/'));
   };
 
   private getHash = (method, url, body) => {

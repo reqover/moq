@@ -1,14 +1,10 @@
 import { Request, Response } from 'express';
 import fs from 'fs';
-
 import { render } from '../services/template.service';
 import { logger } from '../utils/logger';
 import { bodyMatch, getFiles, mappingsDir, matchPath, randInt } from '../utils/util';
 
 export default class MockService {
-  getMocksArchive(serverId: string) {
-    throw new Error('Method not implemented.');
-  }
   public getMocks(serverId: string) {
     const dir = mappingsDir(serverId);
     const mocks = [];
@@ -63,7 +59,9 @@ export default class MockService {
       };
 
       const mockResponse = await render(mock.response.body, params);
-      logger.info(`Mock response for ${method} ${url} (${statusCode})\n ${JSON.stringify(mockResponse, null, 2)}`);
+      logger.info(`======= Mock ${mock.hash} response for ${method} ${url} (${statusCode}) =======
+       ${JSON.stringify(mockResponse, null, 2)}`);
+      logger.info(`======= Mock ${mock.hash} ======`);
       res.status(mock.response.statusCode).send(mockResponse);
     } else {
       logger.info(`Mock is NOT FOUND for ${method} ${url}`);

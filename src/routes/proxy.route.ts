@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { Routes } from '../interfaces/routes.interface';
 import ProxyController from '../controllers/proxy.controller';
+import { PROXY_PATH } from '../config';
 
 export class ProxyRoute implements Routes {
   public router = Router();
@@ -11,7 +12,7 @@ export class ProxyRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.use(`/:serverId/proxy`, this.controller.proxyApi);
+    this.router.use(`/:serverId${PROXY_PATH}`, this.controller.proxyApi);
     this.router.post(`/proxy`, this.controller.createProxy);
   }
 }

@@ -2,6 +2,7 @@ import { MOCKS_DIR } from '../config';
 import glob from 'fast-glob';
 import { match as pathMatcher } from 'path-to-regexp';
 import match from 'match-json';
+import fs from 'fs';
 
 /**
  * @method isEmpty
@@ -41,7 +42,7 @@ export const matchPath = (pattern, path) => {
 };
 
 export const bodyMatch = (body, pattern) => {
-  if (pattern.partial) {
+  if (pattern.partial && Object.keys(body).length > 0) {
     return match.partial(body, pattern.partial);
   }
 
@@ -50,4 +51,15 @@ export const bodyMatch = (body, pattern) => {
 
 export const randInt = (from: number, to: number) => {
   return Math.floor(Math.random() * to) + from;
+};
+
+export const getProxyConfig = async (serverId: string) => {
+  const file = `${MOCKS_DIR}/${serverId}/config.json`;
+  try {
+    const content = fs.readFileSync(file, 'utf8');
+    const config = JSON.parse(content);
+    return config;
+  } catch (error) {
+    throw Error(`Can not load config file ${file}`);
+  }
 };
