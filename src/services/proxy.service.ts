@@ -7,22 +7,23 @@ import fs from 'fs';
 import { MOCKS_DIR } from '../config';
 import { join } from 'path';
 import { mappingsDir } from '../utils/util';
+import md5 from 'md5';
 
 export default class ProxyService {
   public createProxy = async (serverId, url) => {
     const configDir: string = join('/tmp', 'mocks', serverId);
-    const fileName = `config.js`;
+    const fileName = `config.json`;
     const configFilePath = join(configDir, fileName);
 
-    const data = `exports.config = {
-    serverUrl: "${url}"
-}
-    `;
+    const data = {
+      serverUrl: url
+    };
+
     if (!fs.existsSync(configDir)) {
       fs.mkdirSync(configDir, { recursive: true });
     }
 
-    await fs.writeFileSync(configFilePath, data);
+    await fs.writeFileSync(configFilePath, JSON.stringify(data));
     return { status: 'created' };
   };
 
@@ -34,9 +35,10 @@ export default class ProxyService {
   };
 
   private getProxytarget = async (serverId: string) => {
-    const file = `${MOCKS_DIR}/${serverId}/config.js`;
+    const file = `${MOCKS_DIR}/${serverId}/config.json`;
     try {
-      const { config } = await import(file);
+      const content = fs.readFileSync(file, 'utf8');
+      const config = JSON.parse(content);
       return config.serverUrl;
     } catch (error) {
       throw Error(`Can not load config file ${file}`);
@@ -103,9 +105,11 @@ export default class ProxyService {
     }
 
     const uuid = uuidv4();
+    const hash =  md5(requestUrl);
     const result = JSON.stringify(
       {
         id: uuid,
+        hash: hash,
         request: {
           method: requestMethod,
           url: requestUrl,
@@ -126,7 +130,7 @@ export default class ProxyService {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    const fileName = `${dir}/${uuid}.json`;
+    const fileName = `${dir}/${hash}.json`;
     fs.writeFileSync(fileName, result);
     logger.info(`Proxy result is saved: ${fileName}`);
     return response;
