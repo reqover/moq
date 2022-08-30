@@ -6,6 +6,9 @@ import { logger } from '../utils/logger';
 import { bodyMatch, getFiles, mappingsDir, matchPath, randInt } from '../utils/util';
 
 export default class MockService {
+  getMocksArchive(serverId: string) {
+    throw new Error('Method not implemented.');
+  }
   public getMocks(serverId: string) {
     const dir = mappingsDir(serverId);
     const mocks = [];
