@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 import { Routes } from '../interfaces/routes.interface';
 import { MockController } from '../controllers/mock.controller';
-import { MOCKS_DIR } from '@/config';
+import { MOCKS_DIR } from '../config';
 import serveIndex from 'serve-index';
 
 export class MockRoute implements Routes {
