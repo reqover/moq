@@ -81,7 +81,7 @@ export default class ProxyService {
       proxyReq.write(bodyData);
     };
 
-    if (contentType === 'application/json') {
+    if (contentType === 'application/json' || contentType === 'application/json; charset=UTF-8') {
       writeBody(JSON.stringify(req.body));
     }
 
