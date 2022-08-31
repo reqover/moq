@@ -26,6 +26,10 @@ export const isEmpty = (value: string | number | object): boolean => {
   }
 };
 
+export const isObject = variable => {
+  return typeof variable === 'object' && variable !== null;
+};
+
 export const getFiles = dir => {
   return glob.sync([`${dir}/**/*.json`]);
 };
@@ -50,9 +54,9 @@ export const bodyMatch = (body, pattern) => {
     }
 
     return match(body, pattern.equalTo);
-  }catch(error){
-    logger.error(error)
-    return false
+  } catch (error) {
+    logger.error(error);
+    return false;
   }
 };
 

@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import { PROXY_PATH } from '../config';
 import { join } from 'path';
-import { getHash, getProxyConfig, mappingsDir, proxyRootDir } from '../utils/util';
+import { getHash, getProxyConfig, isEmpty, mappingsDir, proxyRootDir } from '../utils/util';
 
 export default class ProxyService {
   public createProxy = async (serverId, url) => {
@@ -80,9 +80,9 @@ export default class ProxyService {
     const requestBody = req.body;
 
     const responseStatusCode = res.statusCode;
-    let responseBody = null;
+    let responseBody = {};
     const response = responseBuffer.toString('utf8');
-    if (proxyRes.headers['content-type'] === 'application/json') {
+    if (!isEmpty(response) && proxyRes.headers['content-type'] === 'application/json') {
       responseBody = JSON.parse(response);
     }
 

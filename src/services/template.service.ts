@@ -14,9 +14,9 @@ const future_date = new TwingFunction(
   'future_date',
   (date, plus_days, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'") => {
     const oldDate = new Date(date);
-    const oldDateDay = oldDate.getDate()
+    const oldDateDay = oldDate.getDate();
     oldDate.setDate(oldDateDay + plus_days);
-    const result = format(oldDate, pattern)
+    const result = format(oldDate, pattern);
     return Promise.resolve(result);
   },
   [],

@@ -3,12 +3,14 @@ import { NextFunction, Request, Response } from 'express';
 import { PORT } from '../config';
 import { getProxyConfig } from '../utils/util';
 import MockService from '../services/mock.service';
+import { logger } from '../utils/logger';
 
 export default class ProxyController {
   public proxyService = new ProxyService();
   public mockService = new MockService();
 
   public proxyApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    logger.info(`Request [${req.method}] ${req.url}`);
     try {
       const serverId = req.params.serverId;
       const config = await getProxyConfig(serverId);

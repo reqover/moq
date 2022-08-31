@@ -27,9 +27,11 @@ export default class MockService {
     const method = req.method;
     const body = req.body;
     const mocksForPath = [];
-
     const dir = mappingsDir(serverId);
-    logger.info(`About to find a mock for [${method}] ${url}`)
+
+    logger.info('========= About to find a mock ============');
+    logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n`);
+
     getFiles(dir).forEach(file => {
       const rawdata = fs.readFileSync(file) as any;
       const mock = JSON.parse(rawdata);
@@ -61,14 +63,14 @@ export default class MockService {
       };
 
       const mockResponse = await render(mock.response.body, params);
-      this.logMockResponse(mock, method, url, statusCode, mockResponse)
+      this.logMockResponse(mock, method, url, statusCode, mockResponse);
       res.status(mock.response.statusCode).send(mockResponse);
     } else {
       logger.info(`Mock is NOT FOUND for ${method} ${url}`);
 
-      const unmatchedDir = join(dir, '..' ,'missing')
-      
-      const request = { method, url, body }
+      const unmatchedDir = join(dir, '..', 'missing');
+
+      const request = { method, url, body };
 
       if (!fs.existsSync(unmatchedDir)) {
         fs.mkdirSync(unmatchedDir, { recursive: true });
@@ -86,9 +88,9 @@ export default class MockService {
   };
 
   private logMockResponse = (mock, method, url, statusCode, mockResponse) => {
-    logger.info(`======= Mock ${mock.hash} =======
-Response for [${method}] ${url} (${statusCode}) \n
+    logger.info(`Response for [${method}] ${url} (${statusCode})`);
+    logger.info(`======= Mock ${mock.hash} =======\n
 ${JSON.stringify(mockResponse, null, 2)}\n`);
     logger.info(`======= Mock ${mock.hash} ======`);
-  }
+  };
 }
