@@ -29,6 +29,7 @@ export default class MockService {
     const mocksForPath = [];
 
     const dir = mappingsDir(serverId);
+    logger.info(`About to find a mock for [${method}] ${url}`)
     getFiles(dir).forEach(file => {
       const rawdata = fs.readFileSync(file) as any;
       const mock = JSON.parse(rawdata);

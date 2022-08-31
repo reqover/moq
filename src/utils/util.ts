@@ -4,6 +4,7 @@ import { match as pathMatcher } from 'path-to-regexp';
 import match from 'match-json';
 import fs from 'fs';
 import md5 from 'md5';
+import { logger } from './logger';
 
 /**
  * @method isEmpty
@@ -43,11 +44,16 @@ export const matchPath = (pattern, path) => {
 };
 
 export const bodyMatch = (body, pattern) => {
-  if (pattern.partial && Object.keys(body).length > 0) {
-    return match.partial(body, pattern.partial);
-  }
+  try {
+    if (pattern.partial && Object.keys(body).length > 0) {
+      return match.partial(body, pattern.partial);
+    }
 
-  return match(body, pattern.equalTo);
+    return match(body, pattern.equalTo);
+  }catch(error){
+    logger.error(error)
+    return false
+  }
 };
 
 export const randInt = (from: number, to: number) => {
