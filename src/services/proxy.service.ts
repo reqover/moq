@@ -1,6 +1,6 @@
 import { createProxyMiddleware, responseInterceptor } from 'http-proxy-middleware';
 import { logger } from '../utils/logger';
-import querystring from 'querystring';
+import qs from 'qs';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import { PROXY_PATH } from '../config';
@@ -57,18 +57,19 @@ export default class ProxyService {
       return;
     }
 
-    const contentType = proxyReq.getHeader('Content-Type');
+    const contentType: string = proxyReq.getHeader('Content-Type');
     const writeBody = (bodyData: string) => {
       proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
       proxyReq.write(bodyData);
     };
 
-    if (contentType === 'application/json' || contentType === 'application/json; charset=UTF-8') {
+    if (contentType.includes('application/json')) {
       writeBody(JSON.stringify(req.body));
     }
 
-    if (contentType === 'application/x-www-form-urlencoded') {
-      writeBody(querystring.stringify(req.body));
+    if (contentType.includes('application/x-www-form-urlencoded')) {
+      const body = qs.stringify(req.body)
+      writeBody(body);
     }
     // or log the req
   };
