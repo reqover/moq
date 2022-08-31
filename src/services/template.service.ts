@@ -10,6 +10,18 @@ const dateTime = new TwingFunction(
   [],
 );
 
+const future_date = new TwingFunction(
+  'future_date',
+  (date, plus_days, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'") => {
+    const oldDate = new Date(date);
+    const oldDateDay = oldDate.getDate()
+    oldDate.setDate(oldDateDay + plus_days);
+    const result = format(oldDate, pattern)
+    return Promise.resolve(result);
+  },
+  [],
+);
+
 export async function render(template: string, requestParams: any) {
   const loader = new TwingLoaderArray({
     template: JSON.stringify(template),
@@ -17,8 +29,9 @@ export async function render(template: string, requestParams: any) {
   const twing = new TwingEnvironment(loader);
   twing.addGlobal('faker', faker);
   twing.addGlobal('req', requestParams);
-  twing.addGlobal('date', new Date());
+  twing.addGlobal('now', new Date());
   twing.addFunction(dateTime);
+  twing.addFunction(future_date);
 
   const output = await twing.render('template');
   return JSON.parse(output);
