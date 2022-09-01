@@ -31,7 +31,8 @@ export default class MockService {
     const dir = mappingsDir(serverId);
 
     logger.info('========= About to find a mock ============');
-    logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n`);
+    logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n
+Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
 
     getFiles(dir).forEach(file => {
       const rawdata = fs.readFileSync(file) as any;
