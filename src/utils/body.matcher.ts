@@ -24,7 +24,7 @@ export const bodyMatch = async (serverId, body, pattern) => {
     return equalToRuleMatch(body, pattern);
   } catch (error) {
     logger.error(error);
-    return false;
+    throw error;
   }
 };
 
