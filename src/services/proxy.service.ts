@@ -12,7 +12,10 @@ export default class ProxyService {
   public createProxy = async (serverId, url) => {
     const data = {
       serverUrl: url,
-      proxy: true,
+      proxy: {
+        enabled: true,
+        omitHeaders: []
+      },
     };
 
     this.saveConfig(serverId, data);
