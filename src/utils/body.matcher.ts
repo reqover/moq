@@ -1,12 +1,24 @@
 import { logger } from './logger';
 import match from 'match-json';
 import { omitMetaProps } from './util';
+import { join } from 'path';
+import { MOCKS_DIR } from '@/config';
+import importFresh from 'import-fresh';
 
-export const bodyMatch = (body, pattern) => {
+export const bodyMatch = async (serverId, body, pattern) => {
   try {
     if (isPartialMatch(body, pattern)) {
       const partialContent = pattern.partial?.content;
       return match.partial(body, partialContent);
+    }
+    const usingScript = pattern.equalTo.usingScript;
+
+    if(usingScript){
+      const scriptPath = join(MOCKS_DIR, serverId, 'matchers', usingScript);
+      delete require.cache[usingScript];
+      const { matcher } = await importFresh(scriptPath);
+      const result =  matcher(match, body);
+      return result;
     }
 
     return equalToRuleMatch(body, pattern);
@@ -29,6 +41,11 @@ function equalToRuleMatch(body, pattern) {
 function isPartialMatch(body, pattern) {
   return pattern.partial && Object.keys(body).length > 0;
 }
+
+function isScriptMatcher(pattern) {
+  return pattern.equalTo.usingScript;
+}
+
 
 export function getPropsToOmit(obj) {
   const omitProps = ['<any>'];

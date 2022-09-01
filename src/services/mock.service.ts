@@ -34,28 +34,28 @@ export default class MockService {
     logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n
 Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
 
-    getFiles(dir).forEach(file => {
+    for( const file of getFiles(dir)) {
       const rawdata = fs.readFileSync(file) as any;
       const mock = JSON.parse(rawdata);
 
       if (mock.request.method != method) {
-        return;
+        continue;
       }
 
       const urlMatchingResult = matchPath(mock.request.url, url);
       if (!urlMatchingResult) {
-        return;
+        continue;
       }
 
       if (body) {
-        const isBodyMatch = bodyMatch(body, mock.request.body);
+        const isBodyMatch = await bodyMatch(serverId, body, mock.request.body);
         if (!isBodyMatch) {
-          return;
+          continue;
         }
       }
 
       mocksForPath.push({ ...mock, params: urlMatchingResult.params });
-    });
+    };
 
     if (mocksForPath.length > 0) {
       const mock = mocksForPath[randInt(0, mocksForPath.length)];
