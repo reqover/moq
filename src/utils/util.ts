@@ -1,10 +1,8 @@
 import { MOCKS_DIR } from '../config';
 import glob from 'fast-glob';
 import { match as pathMatcher } from 'path-to-regexp';
-import match from 'match-json';
 import fs from 'fs';
 import md5 from 'md5';
-import { logger } from './logger';
 
 /**
  * @method isEmpty
@@ -45,28 +43,6 @@ export const proxyRootDir = serverId => {
 export const matchPath = (pattern, path) => {
   const matchFunction = pathMatcher(pattern.replace('?', '\\?'));
   return matchFunction(path);
-};
-
-export const bodyMatch = (body, pattern) => {
-  const partialContent = pattern.partial?.content;
-  try {
-    if (partialContent && Object.keys(body).length > 0) {
-      return match.partial(body, partialContent);
-    }
-
-    const equalToRule = pattern.equalTo;
-    const equalToContent = equalToRule.content;
-
-    const propsToOmit = getPropsToOmit(equalToRule);
-
-    const requestBody = omitMetaProps(body, ...propsToOmit);
-    const mockBody = omitMetaProps(equalToContent, ...propsToOmit);
-
-    return match(requestBody, mockBody);
-  } catch (error) {
-    logger.error(error);
-    return false;
-  }
 };
 
 export const randInt = (from: number, to: number) => {
@@ -121,22 +97,4 @@ export function omitMetaProps(obj, ...props) {
     }
   }
   return data;
-}
-
-export function getPropsToOmit(obj) {
-  const omitProps = ['<any>'];
-  const result = [];
-  const data = { ...obj.content };
-  for (const prop in data) {
-    const value = data[prop];
-    if (omitProps.includes(value)) {
-      result.push(prop);
-    } else if (typeof data[prop] === 'object') {
-      getPropsToOmit(data[prop]);
-    }
-  }
-
-  const omit = obj?.omit || [];
-  const propsToOmit = [...omit, ...result];
-  return propsToOmit;
 }

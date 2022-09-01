@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import { PROXY_PATH } from '../config';
 import { join } from 'path';
-import { generateString, getHash, getProxyConfig, isEmpty, mappingsDir, proxyRootDir } from '../utils/util';
+import { getHash, getProxyConfig, isEmpty, mappingsDir, proxyRootDir } from '../utils/util';
 import { ClientRequest } from 'http';
 
 export default class ProxyService {
@@ -134,7 +134,7 @@ export default class ProxyService {
 
     let fileName = `${dir}/${hash}.json`;
     if (fs.existsSync(fileName)) {
-      fileName = `${dir}/${hash}-copy-${generateString(5)}.json`;
+      fileName = `${dir}/${hash}-copy.json`;
     }
     fs.writeFileSync(fileName, result);
     logger.info(`Proxy result is saved: ${fileName}`);

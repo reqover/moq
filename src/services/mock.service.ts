@@ -1,9 +1,10 @@
+import { bodyMatch } from '../utils/body.matcher';
 import { Request, Response } from 'express';
 import fs from 'fs';
 import { join } from 'path';
 import { render } from '../services/template.service';
 import { logger } from '../utils/logger';
-import { bodyMatch, getFiles, getHash, mappingsDir, matchPath, randInt } from '../utils/util';
+import { getFiles, getHash, mappingsDir, matchPath, randInt } from '../utils/util';
 
 export default class MockService {
   public getMocks(serverId: string) {
