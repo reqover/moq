@@ -11,7 +11,11 @@ docker run -p 3000:3000 \
 confg.json
 ```
 {
-    serverUrl: 'https://petstore.swagger.io'
+    "serverUrl": "https://petstore.swagger.io",
+    "proxy": {
+        "enabled": "true",
+        "omitHeaders": []
+    }
 }
 ```
 

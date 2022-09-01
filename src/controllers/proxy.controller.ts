@@ -14,7 +14,7 @@ export default class ProxyController {
     try {
       const serverId = req.params.serverId;
       const config = await getProxyConfig(serverId);
-      if (!config.proxy) {
+      if (!config.proxy?.enabled) {
         res.send(await this.mockService.findMock(req, res));
       } else {
         const middleware = await this.proxyService.proxy(config);
