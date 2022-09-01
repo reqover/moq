@@ -48,12 +48,21 @@ export const matchPath = (pattern, path) => {
 };
 
 export const bodyMatch = (body, pattern) => {
+  const partialContent = pattern.partial?.content;
   try {
-    if (pattern.partial && Object.keys(body).length > 0) {
-      return match.partial(body, pattern.partial);
+    if (partialContent && Object.keys(body).length > 0) {
+      return match.partial(body, partialContent);
     }
 
-    return match(body, pattern.equalTo);
+    const equalToRule = pattern.equalTo;
+    const equalToContent = equalToRule.content;
+
+    const propsToOmit = getPropsToOmit(equalToRule);
+
+    const requestBody = omitMetaProps(body, ...propsToOmit);
+    const mockBody = omitMetaProps(equalToContent, ...propsToOmit);
+
+    return match(requestBody, mockBody);
   } catch (error) {
     logger.error(error);
     return false;
@@ -80,3 +89,54 @@ export const getHash = (method, url, body) => {
   const hash = md5(data);
   return hash;
 };
+
+const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+export function generateString(length) {
+  let result = '';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+
+  return result;
+}
+
+export function omit(obj, ...props) {
+  const result = { ...obj };
+  props.forEach(function (prop) {
+    delete result[prop];
+  });
+  return result;
+}
+
+export function omitMetaProps(obj, ...props) {
+  const data = { ...obj };
+  for (const prop in data) {
+    const value = data[prop];
+    if (props.includes(prop) || props.includes(value)) {
+      delete data[prop];
+    } else if (typeof data[prop] === 'object') {
+      omitMetaProps(data[prop]);
+    }
+  }
+  return data;
+}
+
+export function getPropsToOmit(obj) {
+  const omitProps = ['<any>'];
+  const result = [];
+  const data = { ...obj.content };
+  for (const prop in data) {
+    const value = data[prop];
+    if (omitProps.includes(value)) {
+      result.push(prop);
+    } else if (typeof data[prop] === 'object') {
+      getPropsToOmit(data[prop]);
+    }
+  }
+
+  const omit = obj?.omit || [];
+  const propsToOmit = [...omit, ...result];
+  return propsToOmit;
+}

@@ -35,7 +35,15 @@ export default class MockService {
     getFiles(dir).forEach(file => {
       const rawdata = fs.readFileSync(file) as any;
       const mock = JSON.parse(rawdata);
+
+      if (mock.request.method != method) {
+        return;
+      }
+
       const urlMatchingResult = matchPath(mock.request.url, url);
+      if (!urlMatchingResult) {
+        return;
+      }
 
       if (body) {
         const isBodyMatch = bodyMatch(body, mock.request.body);
@@ -44,9 +52,7 @@ export default class MockService {
         }
       }
 
-      if (urlMatchingResult && mock.request.method == method) {
-        mocksForPath.push({ ...mock, params: urlMatchingResult.params });
-      }
+      mocksForPath.push({ ...mock, params: urlMatchingResult.params });
     });
 
     if (mocksForPath.length > 0) {
@@ -67,16 +73,13 @@ export default class MockService {
       res.status(mock.response.statusCode).send(mockResponse);
     } else {
       logger.info(`Mock is NOT FOUND for ${method} ${url}`);
-
       const unmatchedDir = join(dir, '..', 'missing');
-
       const request = { method, url, body };
 
       if (!fs.existsSync(unmatchedDir)) {
         fs.mkdirSync(unmatchedDir, { recursive: true });
       }
       const hash = getHash(method, url, body);
-
       const fileName = `${unmatchedDir}/${hash}.json`;
       fs.writeFileSync(fileName, JSON.stringify(request, null, 2));
 

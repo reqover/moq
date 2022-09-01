@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import { PROXY_PATH } from '../config';
 import { join } from 'path';
-import { getHash, getProxyConfig, isEmpty, mappingsDir, proxyRootDir } from '../utils/util';
+import { generateString, getHash, getProxyConfig, isEmpty, mappingsDir, proxyRootDir } from '../utils/util';
 import { ClientRequest } from 'http';
 
 export default class ProxyService {
@@ -14,7 +14,7 @@ export default class ProxyService {
       serverUrl: url,
       proxy: {
         enabled: true,
-        omitHeaders: []
+        omitHeaders: [],
       },
     };
 
@@ -55,13 +55,13 @@ export default class ProxyService {
     });
   };
 
-  private proxyReq = (config) => {
+  private proxyReq = config => {
     return (proxyReq: ClientRequest, req) => {
-      const omitHeaders: string[] = config.proxy.omitHeaders || []
-      if(omitHeaders){
-        omitHeaders.forEach((header) => {
-          proxyReq.removeHeader(header)
-        })
+      const omitHeaders: string[] = config.proxy.omitHeaders || [];
+      if (omitHeaders) {
+        omitHeaders.forEach(header => {
+          proxyReq.removeHeader(header);
+        });
       }
 
       // add custom header to request
@@ -80,11 +80,11 @@ export default class ProxyService {
       }
 
       if (contentType?.includes('application/x-www-form-urlencoded')) {
-        const body = qs.stringify(req.body)
+        const body = qs.stringify(req.body);
         writeBody(body);
       }
       // or log the req
-    }
+    };
   };
 
   private proxyRes = (responseBuffer, proxyRes, req, res) => {
@@ -111,7 +111,9 @@ export default class ProxyService {
           url: requestUrl,
           body: {
             equalTo: {
-              ...requestBody,
+              content: {
+                ...requestBody,
+              },
             },
           },
         },
@@ -120,9 +122,7 @@ export default class ProxyService {
           body: responseBody,
         },
       },
-      (key, value) => {
-        if (value !== null) return value;
-      },
+      null,
       4,
     );
 
@@ -131,7 +131,11 @@ export default class ProxyService {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    const fileName = `${dir}/${hash}.json`;
+
+    let fileName = `${dir}/${hash}.json`;
+    if (fs.existsSync(fileName)) {
+      fileName = `${dir}/${hash}-copy-${generateString(5)}.json`;
+    }
     fs.writeFileSync(fileName, result);
     logger.info(`Proxy result is saved: ${fileName}`);
     return response;
