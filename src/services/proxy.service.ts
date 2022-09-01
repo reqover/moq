@@ -60,36 +60,28 @@ export default class ProxyService {
           proxyReq.removeHeader(header)
         })
       }
+
+      // add custom header to request
+      if (!req.body) {
+        return;
+      }
+
+      const contentType: any = proxyReq.getHeader('Content-Type');
+      const writeBody = (bodyData: string) => {
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      };
+
+      if (contentType?.includes('application/json')) {
+        writeBody(JSON.stringify(req.body));
+      }
+
+      if (contentType?.includes('application/x-www-form-urlencoded')) {
+        const body = qs.stringify(req.body)
+        writeBody(body);
+      }
+      // or log the req
     }
-
-    // let headers = req.headers;
-    // delete headers['x-forwarded-for']
-    // delete headers['x-forwarded-proto']
-    // console.log()
-    // req.headers = headers
-    // console.log()
-    // proxyReq.getHeaders()
-    
-    // add custom header to request
-    // if (!req.body) {
-    //   return;
-    // }
-
-    // const contentType: string = proxyReq.getHeader('Content-Type');
-    // const writeBody = (bodyData: string) => {
-    //   proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-    //   proxyReq.write(bodyData);
-    // };
-
-    // if (contentType?.includes('application/json')) {
-    //   writeBody(JSON.stringify(req.body));
-    // }
-
-    // if (contentType?.includes('application/x-www-form-urlencoded')) {
-    //   const body = qs.stringify(req.body)
-    //   writeBody(body);
-    // }
-    // or log the req
   };
 
   private proxyRes = (responseBuffer, proxyRes, req, res) => {
