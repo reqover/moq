@@ -1,8 +1,9 @@
 import { logger } from './logger';
 import match from 'match-json';
-import { importFresh, omitMetaProps } from './util';
+import { omitMetaProps } from './util';
 import { join } from 'path';
 import { MOCKS_DIR } from '../config';
+import importFresh from 'import-fresh';
 
 export const bodyMatch = async (serverId, body, mock) => {
   try {
@@ -16,7 +17,7 @@ export const bodyMatch = async (serverId, body, mock) => {
       const scriptPath = join(MOCKS_DIR, serverId, 'matchers', matcherScript);
       delete require.cache[matcherScript];
       const { matcher } = await importFresh(scriptPath);
-      return matcher(match, body, mock.request.body);
+      return matcher(match, body, mock.body);
     }
     
     return equalToRuleMatch(body, mock.body);
