@@ -100,5 +100,5 @@ export function omitMetaProps(obj, ...props) {
 }
 
 export async function importFresh(modulePath) {
-    return await import(`${modulePath}?update=${new Date()}`)
+  return await import(`${modulePath}?update=${new Date()}`);
 }

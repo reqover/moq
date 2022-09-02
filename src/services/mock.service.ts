@@ -34,7 +34,7 @@ export default class MockService {
     logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n
 Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
 
-    for( const file of getFiles(dir)) {
+    for (const file of getFiles(dir)) {
       const rawdata = fs.readFileSync(file) as any;
       const mock = JSON.parse(rawdata);
 
@@ -46,16 +46,16 @@ Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
       if (!urlMatchingResult) {
         continue;
       }
-
+     
       if (body) {
-        const isBodyMatch = await bodyMatch(serverId, body, mock.request.body);
+        const isBodyMatch = await bodyMatch(serverId, body, mock.request);
         if (!isBodyMatch) {
           continue;
         }
       }
 
       mocksForPath.push({ ...mock, params: urlMatchingResult.params });
-    };
+    }
 
     if (mocksForPath.length > 0) {
       const mock = mocksForPath[randInt(0, mocksForPath.length)];
