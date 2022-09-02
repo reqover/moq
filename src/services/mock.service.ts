@@ -74,7 +74,7 @@ Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
       this.logMockResponse(mock, method, url, statusCode, mockResponse);
       res.status(mock.response.statusCode).send(mockResponse);
     } else {
-      logger.info(`Mock is NOT FOUND for ${method} ${url}`);
+      logger.info(`Mock is NOT FOUND for ${method} ${url}\n\n${JSON.stringify(body, null, 2)}\n`);
       const unmatchedDir = join(dir, '..', 'missing');
       const request = { method, url, body };
 

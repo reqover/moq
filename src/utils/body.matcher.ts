@@ -47,6 +47,9 @@ export function getPropsToOmit(obj) {
   const data = { ...obj.content };
   for (const prop in data) {
     const value = data[prop];
+    if (value === null) {
+      continue
+    }
     if (omitProps.includes(value)) {
       result.push(prop);
     } else if (typeof data[prop] === 'object') {

@@ -1,7 +1,6 @@
 import { createProxyMiddleware, responseInterceptor } from 'http-proxy-middleware';
 import { logger } from '../utils/logger';
 import qs from 'qs';
-import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import { PROXY_PATH } from '../config';
 import { join } from 'path';
@@ -100,12 +99,10 @@ export default class ProxyService {
       responseBody = JSON.parse(response);
     }
 
-    const uuid = uuidv4();
     const hash = getHash(requestMethod, requestUrl, requestBody);
     const result = JSON.stringify(
       {
-        id: uuid,
-        hash: hash,
+        id: hash,
         request: {
           method: requestMethod,
           url: requestUrl,
