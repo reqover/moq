@@ -157,8 +157,8 @@ Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
 
   private logMockResponse = (mock, method, url, statusCode, mockResponse) => {
     logger.info(`Response for [${method}] ${url} (${statusCode})`);
-    logger.info(`======= Mock ${mock.hash} =======\n
+    logger.info(`======= Mock ${mock.id} =======\n
 ${JSON.stringify(mockResponse, null, 2)}\n`);
-    logger.info(`======= Mock ${mock.hash} ======`);
+    logger.info(`======= Mock ${mock.id} ======`);
   };
 }

@@ -1,7 +1,7 @@
 import ProxyService from '../services/proxy.service';
 import { NextFunction, Request, Response } from 'express';
 import { PORT } from '../config';
-import { getProxyConfig } from '../utils/util';
+import { getHash, getProxyConfig } from '../utils/util';
 import MockService from '../services/mock.service';
 import { logger } from '../utils/logger';
 
@@ -14,7 +14,12 @@ export default class ProxyController {
     try {
       const serverId = req.params.serverId;
       const config = await getProxyConfig(serverId);
-      if (!config.proxy?.enabled) {
+      const url = req.url;
+      const method = req.method;
+      const body = req.body;
+      const hash = getHash(method, url, body);
+      const proxyConfig = config.proxy;
+      if (!proxyConfig?.enabled || proxyConfig?.useMockFor?.includes(hash)) {
         res.send(await this.mockService.findMock(req, res));
       } else {
         const middleware = await this.proxyService.proxy(config);
