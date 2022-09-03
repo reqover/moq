@@ -15,6 +15,15 @@ export class MockController {
     }
   };
 
+  public resetMockRequestsApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const data = req.body;
+    try {
+      res.send(await this.mockService.resetMockRequests(data));
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public getMocskApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const serverId = req.params.serverId || 'default';
