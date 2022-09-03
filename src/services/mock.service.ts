@@ -46,7 +46,7 @@ Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
       if (!urlMatchingResult) {
         continue;
       }
-     
+
       if (body) {
         const isBodyMatch = await bodyMatch(serverId, body, mock.request);
         if (!isBodyMatch) {
@@ -75,16 +75,41 @@ Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
       res.status(mock.response.statusCode).send(mockResponse);
     } else {
       logger.info(`Mock is NOT FOUND for ${method} ${url}\n\n${JSON.stringify(body, null, 2)}\n`);
-      const unmatchedDir = join(dir, '..', 'missing');
-      const request = { method, url, body };
+      const folders = pathToFolders(req.path);
+      const unmatchedDir = join(dir, '..', 'missing', folders);
+      
+      const hash = getHash(method, url, body);
+      const result = JSON.stringify(
+        {
+          id: hash,
+          request: {
+            method: method,
+            url: url,
+            body: {
+              equalTo: {
+                content: {
+                  ...body,
+                },
+              },
+            },
+          },
+          response: {
+            statusCode: null,
+            body: null,
+          },
+        },
+        null,
+        4,
+      );
 
       if (!fs.existsSync(unmatchedDir)) {
         fs.mkdirSync(unmatchedDir, { recursive: true });
       }
-      const hash = getHash(method, url, body);
-      const fileName = `${unmatchedDir}/${hash}.json`;
-      fs.writeFileSync(fileName, JSON.stringify(request, null, 2));
 
+      const fileName = `${unmatchedDir}/${hash}.json`;
+      fs.writeFileSync(fileName, result);
+
+      const request = { method, url, body };
       res.status(404).send({
         status: 'Mock not found',
         request,

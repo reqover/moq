@@ -19,7 +19,7 @@ export const bodyMatch = async (serverId, body, mock) => {
       const { matcher } = await importFresh(scriptPath);
       return matcher(match, body, mock.body);
     }
-    
+
     return equalToRuleMatch(body, mock.body);
   } catch (error) {
     logger.error(error);
@@ -48,7 +48,7 @@ export function getPropsToOmit(obj) {
   for (const prop in data) {
     const value = data[prop];
     if (value === null) {
-      continue
+      continue;
     }
     if (omitProps.includes(value)) {
       result.push(prop);

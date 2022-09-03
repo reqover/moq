@@ -3,6 +3,7 @@ import glob from 'fast-glob';
 import { match as pathMatcher } from 'path-to-regexp';
 import fs from 'fs';
 import md5 from 'md5';
+import { join } from 'path';
 
 /**
  * @method isEmpty
@@ -98,3 +99,7 @@ export function omitMetaProps(obj, ...props) {
   }
   return data;
 }
+
+export function pathToFolders (path: string){
+  return join(...path.split('/'));
+};

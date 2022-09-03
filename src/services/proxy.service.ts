@@ -4,7 +4,7 @@ import qs from 'qs';
 import fs from 'fs';
 import { PROXY_PATH } from '../config';
 import { join } from 'path';
-import { getHash, getProxyConfig, isEmpty, mappingsDir, proxyRootDir } from '../utils/util';
+import { getHash, getProxyConfig, isEmpty, mappingsDir, pathToFolders, proxyRootDir } from '../utils/util';
 import { ClientRequest } from 'http';
 
 export default class ProxyService {
@@ -123,7 +123,7 @@ export default class ProxyService {
       4,
     );
 
-    const folders = this.pathToFolders(req.path);
+    const folders = pathToFolders(req.path);
     const dir = join(mappingsDir(serverId), folders);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -131,15 +131,15 @@ export default class ProxyService {
 
     let fileName = `${dir}/${hash}.json`;
     if (fs.existsSync(fileName)) {
-      fileName = `${dir}/${hash}-copy.json`;
+      const rawData = fs.readFileSync(fileName, 'utf-8');
+      const dataFromFile = JSON.stringify(JSON.parse(rawData), null, 4);
+      if (result !== dataFromFile) {
+        fileName = `${dir}/${hash}-copy.json`;
+      }
     }
     fs.writeFileSync(fileName, result);
     logger.info(`Proxy result is saved: ${fileName}`);
     return response;
-  };
-
-  private pathToFolders = (path: string) => {
-    return join(...path.split('/'));
   };
 
   public recording = async (serverId, status: any) => {
