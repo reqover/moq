@@ -86,8 +86,7 @@ Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
     const groupedMocks = this.groupByTimes(mocksForPath)
     const mocksForRequest = groupedMocks[requestCount] || groupedMocks[0];
     if (mocksForRequest?.length > 0) {
-      const mock = mocksForRequest[randInt(0, mocksForRequest.length - 1)]
-
+      const mock = _.sample(mocksForRequest)
       const statusCode = mock.response.statusCode;
 
       const params = {
