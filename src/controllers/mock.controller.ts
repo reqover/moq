@@ -3,10 +3,13 @@ import MockService from '../services/mock.service';
 import archiver from 'archiver';
 import { getFiles, mappingsDir } from '../utils/util';
 import path from 'path';
+import { Controller, Get, Route } from 'tsoa';
 
-export class MockController {
+@Route('mocks')
+export class MockController extends Controller {
   public mockService = new MockService();
 
+  @Get('')
   public mockApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       res.send(await this.mockService.findMock(req, res));

@@ -1,13 +1,15 @@
-import { NextFunction, Request, Response } from 'express';
+// import { NextFunction, Request, Response } from 'express';
+import { Controller, Get, Request, Res, Route, TsoaResponse } from 'tsoa';
 
-class IndexController {
-  public index = (req: Request, res: Response, next: NextFunction): void => {
-    try {
-      res.status(200).send({ status: 'OK', message: 'Moq is up and ready to work!!!' });
-    } catch (error) {
-      next(error);
-    }
-  };
+export interface Result {
+  status: string;
+  message: string;
 }
 
-export default IndexController;
+@Route('/')
+export class IndexController extends Controller {
+  @Get('/')
+  public async index(): Promise<Result> {
+    return { status: 'OK', message: 'Moq is up and ready to work!!!' };
+  }
+}
