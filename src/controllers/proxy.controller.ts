@@ -1,15 +1,16 @@
 import ProxyService from '../services/proxy.service';
 import { NextFunction, Request, Response } from 'express';
-import { PORT } from '../config';
 import { getHash, getProxyConfig } from '../utils/util';
 import MockService from '../services/mock.service';
 import { logger } from '../utils/logger';
+import { Body, Controller, Get, Path, Post, Put, Route } from 'tsoa';
 
-export default class ProxyController {
+@Route()
+export class ProxyController extends Controller {
   public proxyService = new ProxyService();
   public mockService = new MockService();
 
-  public proxyApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public async proxyApi(req: Request, res: Response, next: NextFunction): Promise<void> {
     logger.info(`Request [${req.method}] ${req.url}`);
     try {
       const serverId = req.params.serverId;
@@ -29,38 +30,44 @@ export default class ProxyController {
     } catch (error) {
       next(error);
     }
-  };
+  }
 
-  public createProxyApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const serverId = req.body.name;
-      const url = req.body.url;
-      const result = await this.proxyService.createProxy(serverId, url);
-      const proxyUrl = `${req.protocol}://${req.hostname}:${PORT}/${serverId}/moq`;
-      res.send({ ...result, proxyUrl });
-    } catch (error) {
-      next(error);
-    }
-  };
+  @Post('proxy')
+  public async createProxyApi(@Body() body: { name: string; url: string }): Promise<any> {
+    const serverName = body.name;
+    const url = body.url;
+    const result = await this.proxyService.createProxy(serverName, url);
+    const proxyPath = `/${serverName}/moq`;
+    return { ...result, proxyPath };
+  }
 
-  public recordingApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  @Put('/{serverName}/config')
+  public async recordingApi(
+    serverName: string,
+    @Body()
+    body: {
+      serverUrl: string;
+      proxy: {
+        enabled: boolean;
+        omitHeaders: string[];
+      };
+    },
+  ): Promise<any> {
     try {
-      const serverId = req.params.serverId;
-      const status = req.body;
-      const result = await this.proxyService.recording(serverId, status);
-      res.send(result);
+      const result = await this.proxyService.recording(serverName, body);
+      return result;
     } catch (error) {
-      next(error);
+      return { error: error.message };
     }
-  };
+  }
 
-  public getConfigApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  @Get('/{serverName}/config')
+  public async getConfigApi(serverName: string): Promise<any> {
     try {
-      const serverId = req.params.serverId;
-      const config = await getProxyConfig(serverId);
-      res.send(config);
+      const config = await getProxyConfig(serverName);
+      return config;
     } catch (error) {
-      next(error);
+      return { error: error.message };
     }
-  };
+  }
 }

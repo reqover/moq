@@ -23,6 +23,7 @@ RUN npm install --only=prod
 RUN npm install -g cross-env
 
 COPY --from=0 /usr/src/app/dist ./dist
+COPY --from=0 /usr/src/app/build/swagger.json ./dist/swagger.json
 
 ENV LOG_DIR=/tmp/logs
 EXPOSE 3000
