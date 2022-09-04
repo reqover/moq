@@ -37,6 +37,7 @@ export default class MockService {
     } else {
       mockRequests[hash] = { times: 1 };
     }
+    return this.getRequestCount(hash);
   };
 
   private getRequestCount = hash => {
@@ -52,8 +53,7 @@ export default class MockService {
     const dir = mappingsDir(serverId);
     const hash = getHash(method, url, body);
 
-    this.countRequest(hash);
-
+    const requestCount =this.countRequest(hash);
     logger.info('========= About to find a mock ============');
     logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n
 Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
@@ -81,9 +81,9 @@ Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
       mocksForPath.push({ ...mock, params: urlMatchingResult.params });
     }
 
-    const requestCount = this.getRequestCount(hash);
+    const oddOrOven = (requestCount % 2  == 0) ? "even" : "odd";
     const groupedMocks = this.groupByTimes(mocksForPath);
-    const mocksForRequest = groupedMocks[requestCount] || groupedMocks[0];
+    const mocksForRequest = groupedMocks[requestCount] || groupedMocks[oddOrOven] || groupedMocks[0];
     if (mocksForRequest?.length > 0) {
       const mock = _.sample(mocksForRequest);
       const statusCode = mock.response.statusCode;
