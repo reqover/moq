@@ -100,6 +100,6 @@ export function omitMetaProps(obj, ...props) {
   return data;
 }
 
-export function pathToFolders (path: string){
+export function pathToFolders(path: string) {
   return join(...path.split('/'));
-};
+}
