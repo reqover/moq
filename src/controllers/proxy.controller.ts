@@ -36,7 +36,7 @@ export default class ProxyController {
       const serverId = req.body.name;
       const url = req.body.url;
       const result = await this.proxyService.createProxy(serverId, url);
-      const proxyUrl = `${req.protocol}://${req.hostname}:${PORT}/${serverId}${req.path}`;
+      const proxyUrl = `${req.protocol}://${req.hostname}:${PORT}/${serverId}/moq`;
       res.send({ ...result, proxyUrl });
     } catch (error) {
       next(error);
