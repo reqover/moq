@@ -16,7 +16,7 @@ export const bodyMatch = async (serverId, body, mock) => {
     if (matcherScript) {
       const scriptPath = join(MOCKS_DIR, serverId, 'matchers', matcherScript);
       delete require.cache[matcherScript];
-      const { matcher } = await importFresh(scriptPath) as any;
+      const { matcher } = (await importFresh(scriptPath)) as any;
       return matcher(match, body, mock.body);
     }
 

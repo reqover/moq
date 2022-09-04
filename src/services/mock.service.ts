@@ -49,11 +49,11 @@ export default class MockService {
     const url = req.url;
     const method = req.method;
     const body = req.body;
-    const mocksForPath = [];
+    let mocksForPath = [];
     const dir = mappingsDir(serverId);
     const hash = getHash(method, url, body);
 
-    const requestCount =this.countRequest(hash);
+    const requestCount = this.countRequest(hash);
     logger.info('========= About to find a mock ============');
     logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n
 Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
@@ -81,7 +81,23 @@ Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
       mocksForPath.push({ ...mock, params: urlMatchingResult.params });
     }
 
-    const oddOrOven = (requestCount % 2  == 0) ? "even" : "odd";
+    // generate new ites if times is array ex [3, 5]
+    mocksForPath = mocksForPath
+      .map(item => {
+        const result = [];
+        const itemData = item.request.times;
+        if (Array.isArray(itemData)) {
+          for (const n of itemData) {
+            const updatedItem = _.merge({}, item, { request: { times: n } });
+            result.push(updatedItem);
+          }
+          return result;
+        }
+        return item;
+      })
+      .flat();
+
+    const oddOrOven = requestCount % 2 == 0 ? 'even' : 'odd';
     const groupedMocks = this.groupByTimes(mocksForPath);
     const mocksForRequest = groupedMocks[requestCount] || groupedMocks[oddOrOven] || groupedMocks[0];
     if (mocksForRequest?.length > 0) {
