@@ -10,7 +10,7 @@ export class ProxyController extends Controller {
   public proxyService = new ProxyService();
   public mockService = new MockService();
 
-  public async proxyApi(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public proxyApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     logger.info(`Request [${req.method}] ${req.url}`);
     try {
       const serverId = req.params.serverId;

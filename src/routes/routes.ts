@@ -33,7 +33,7 @@ export function RegisterRoutes(app: express.Router) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
-        app.get('/',
+        app.get('/status',
             ...(fetchMiddlewares<RequestHandler>(IndexController)),
             ...(fetchMiddlewares<RequestHandler>(IndexController.prototype.index)),
 
@@ -51,6 +51,56 @@ export function RegisterRoutes(app: express.Router) {
 
 
               const promise = controller.index.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/mock/requests',
+            ...(fetchMiddlewares<RequestHandler>(MockController)),
+            ...(fetchMiddlewares<RequestHandler>(MockController.prototype.resetMockRequestsApi)),
+
+            function MockController_resetMockRequestsApi(request: any, response: any, next: any) {
+            const args = {
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"hash":{"dataType":"enum","enums":[1],"required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new MockController();
+
+
+              const promise = controller.resetMockRequestsApi.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/:serverName/mocks',
+            ...(fetchMiddlewares<RequestHandler>(MockController)),
+            ...(fetchMiddlewares<RequestHandler>(MockController.prototype.getMocskApi)),
+
+            function MockController_getMocskApi(request: any, response: any, next: any) {
+            const args = {
+                    serverName: {"in":"path","name":"serverName","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new MockController();
+
+
+              const promise = controller.getMocskApi.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

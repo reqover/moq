@@ -3,13 +3,12 @@ import MockService from '../services/mock.service';
 import archiver from 'archiver';
 import { getFiles, mappingsDir } from '../utils/util';
 import path from 'path';
-import { Controller, Get, Route } from 'tsoa';
+import { Body, Controller, Get, Put, Route } from 'tsoa';
 
-@Route('mocks')
+@Route()
 export class MockController extends Controller {
   public mockService = new MockService();
 
-  @Get('')
   public mockApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       res.send(await this.mockService.findMock(req, res));
@@ -18,28 +17,30 @@ export class MockController extends Controller {
     }
   };
 
-  public resetMockRequestsApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const data = req.body;
+  @Put('/mock/requests')
+  public async resetMockRequestsApi(@Body() body: {
+    "hash": 1
+  }): Promise<any> {
     try {
-      res.send(await this.mockService.resetMockRequests(data));
+      return await this.mockService.resetMockRequests(body);
     } catch (error) {
-      next(error);
+      return { error: error.message }
     }
   };
 
-  public getMocskApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  @Get('/{serverName}/mocks')
+  public async getMocskApi(serverName: string): Promise<any> {
     try {
-      const serverId = req.params.serverId || 'default';
-      const mocks = this.mockService.getMocks(serverId);
-      res.send(mocks);
+      const mocks = this.mockService.getMocks(serverName);
+      return mocks
     } catch (error) {
-      next(error);
+      return { error: error.message };
     }
   };
 
-  public downloadMocks(req: Request, res: Response, next: NextFunction) {
+  public async downloadMocks(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const serverId = req.params.serverId || 'default';
+      const serverId = req.params.serverName || 'default';
       const archive = archiver('zip');
 
       archive.on('error', function (err) {
@@ -62,7 +63,7 @@ export class MockController extends Controller {
       const files = getFiles(dir);
 
       for (const i in files) {
-        archive.file(files[i], { name: path.basename(files[i]) });
+        archive.file(files[i], { name: files[i] });
       }
 
       archive.finalize();

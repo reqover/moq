@@ -8,7 +8,7 @@ export interface Result {
 
 @Route('/')
 export class IndexController extends Controller {
-  @Get('/')
+  @Get('status')
   public async index(): Promise<Result> {
     return { status: 'OK', message: 'Moq is up and ready to work!!!' };
   }

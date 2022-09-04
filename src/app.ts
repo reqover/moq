@@ -23,7 +23,7 @@ class App {
     this.port = PORT || 3000;
 
     this.initializeMiddlewares();
-    // this.initializeRoutes(routes);
+    this.initializeRoutes(routes);
     this.initializeErrorHandling();
     RegisterRoutes(this.app);
     this.app.use(['/docs', '/swagger'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
