@@ -10,8 +10,13 @@ import { _ } from 'lodash';
 let mockRequests = {};
 
 export default class MockService {
-  public resetMockRequests(data) {
+  public updateMockRequests(data): any {
     mockRequests = { ...mockRequests, ...data };
+    return mockRequests;
+  }
+  
+  public resetMockRequests() {
+    mockRequests = {}
     return mockRequests;
   }
 

@@ -57,7 +57,7 @@
 		},
 		"/mock/requests": {
 			"put": {
-				"operationId": "ResetMockRequestsApi",
+				"operationId": "UpadateMockRequestsApi",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -92,6 +92,23 @@
 						}
 					}
 				}
+			}
+		},
+		"/mock/requests/reset": {
+			"get": {
+				"operationId": "ResetMockRequestsApi",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/{serverName}/mocks": {

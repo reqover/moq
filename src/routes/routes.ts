@@ -59,11 +59,35 @@ export function RegisterRoutes(app: express.Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/mock/requests',
             ...(fetchMiddlewares<RequestHandler>(MockController)),
+            ...(fetchMiddlewares<RequestHandler>(MockController.prototype.upadateMockRequestsApi)),
+
+            function MockController_upadateMockRequestsApi(request: any, response: any, next: any) {
+            const args = {
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"hash":{"dataType":"enum","enums":[1],"required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new MockController();
+
+
+              const promise = controller.upadateMockRequestsApi.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/mock/requests/reset',
+            ...(fetchMiddlewares<RequestHandler>(MockController)),
             ...(fetchMiddlewares<RequestHandler>(MockController.prototype.resetMockRequestsApi)),
 
             function MockController_resetMockRequestsApi(request: any, response: any, next: any) {
             const args = {
-                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"hash":{"dataType":"enum","enums":[1],"required":true}}},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

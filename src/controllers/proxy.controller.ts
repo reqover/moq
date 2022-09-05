@@ -16,11 +16,8 @@ export class ProxyController extends Controller {
       const serverId = req.params.serverId;
       const config = await getProxyConfig(serverId);
       const url = req.url;
-      const method = req.method;
-      const body = req.body;
-      const hash = getHash(method, url, body);
       const proxyConfig = config.proxy;
-      if (!proxyConfig?.enabled || proxyConfig?.useMockFor?.includes(hash)) {
+      if (!proxyConfig?.enabled || proxyConfig?.useMockFor?.includes(url)) {
         res.send(await this.mockService.findMock(req, res));
       } else {
         const middleware = await this.proxyService.proxy(config);

@@ -18,11 +18,20 @@ export class MockController extends Controller {
   };
 
   @Put('/mock/requests')
-  public async resetMockRequestsApi(@Body() body: {
+  public async upadateMockRequestsApi(@Body() body: {
     "hash": 1
   }): Promise<any> {
     try {
-      return await this.mockService.resetMockRequests(body);
+      return await this.mockService.updateMockRequests(body);
+    } catch (error) {
+      return { error: error.message }
+    }
+  };
+
+  @Get('/mock/requests/reset')
+  public async resetMockRequestsApi(): Promise<any> {
+    try {
+      return await this.mockService.resetMockRequests();
     } catch (error) {
       return { error: error.message }
     }

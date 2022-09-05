@@ -59,7 +59,7 @@ export default class ProxyService {
       const omitHeaders: string[] = config.proxy.omitHeaders || [];
       if (omitHeaders) {
         omitHeaders.forEach(header => {
-          proxyReq.removeHeader(header);
+          proxyReq.removeHeader(header.toLowerCase());
         });
       }
 
