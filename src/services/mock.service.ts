@@ -11,6 +11,10 @@ import importFresh from 'import-fresh';
 let mockRequests = {};
 
 export default class MockService {
+  public getMockRequests(): any {
+    return mockRequests;
+  }
+
   public updateMockRequests(data): any {
     mockRequests = { ...mockRequests, ...data };
     return mockRequests;
@@ -21,18 +25,19 @@ export default class MockService {
     return mockRequests;
   }
 
-  public getMocks(serverId: string) {
+  public async getMocks(serverId: string) {
     const dir = mappingsDir(serverId);
     const mocks = [];
-    getFiles(dir).forEach(file => {
+    const files = getFiles(dir);
+    for(const file of files) { 
       try {
-        const rawdata = fs.readFileSync(file) as any;
-        const mock = JSON.parse(rawdata);
+        const { mapping } = await importFresh(file) as any;
+        const mock = JSON.stringify(mapping, null, 2)
         mocks.push(mock);
       } catch (error) {
         throw Error(`Can not read file ${file}`);
       }
-    });
+    };
     return mocks;
   }
 

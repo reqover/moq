@@ -82,6 +82,30 @@ export function RegisterRoutes(app: express.Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/mock/requests',
+            ...(fetchMiddlewares<RequestHandler>(MockController)),
+            ...(fetchMiddlewares<RequestHandler>(MockController.prototype.getMockRequestsApi)),
+
+            function MockController_getMockRequestsApi(request: any, response: any, next: any) {
+            const args = {
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new MockController();
+
+
+              const promise = controller.getMockRequestsApi.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/mock/requests/reset',
             ...(fetchMiddlewares<RequestHandler>(MockController)),
             ...(fetchMiddlewares<RequestHandler>(MockController.prototype.resetMockRequestsApi)),
@@ -100,31 +124,6 @@ export function RegisterRoutes(app: express.Router) {
 
 
               const promise = controller.resetMockRequestsApi.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/:serverName/mocks',
-            ...(fetchMiddlewares<RequestHandler>(MockController)),
-            ...(fetchMiddlewares<RequestHandler>(MockController.prototype.getMocskApi)),
-
-            function MockController_getMocskApi(request: any, response: any, next: any) {
-            const args = {
-                    serverName: {"in":"path","name":"serverName","required":true,"dataType":"string"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const controller = new MockController();
-
-
-              const promise = controller.getMocskApi.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

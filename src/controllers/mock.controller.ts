@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import MockService from '../services/mock.service';
 import archiver from 'archiver';
 import { getFiles, mappingsDir } from '../utils/util';
-import path from 'path';
 import { Body, Controller, Get, Put, Route } from 'tsoa';
 
 @Route()
@@ -28,22 +27,22 @@ export class MockController extends Controller {
     }
   };
 
+
+  @Get('/mock/requests')
+  public async getMockRequestsApi(): Promise<any> {
+    try {
+      return await this.mockService.getMockRequests();
+    } catch (error) {
+      return { error: error.message }
+    }
+  };
+
   @Get('/mock/requests/reset')
   public async resetMockRequestsApi(): Promise<any> {
     try {
       return await this.mockService.resetMockRequests();
     } catch (error) {
       return { error: error.message }
-    }
-  };
-
-  @Get('/{serverName}/mocks')
-  public async getMocskApi(serverName: string): Promise<any> {
-    try {
-      const mocks = this.mockService.getMocks(serverName);
-      return mocks
-    } catch (error) {
-      return { error: error.message };
     }
   };
 

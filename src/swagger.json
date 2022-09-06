@@ -92,6 +92,21 @@
 						}
 					}
 				}
+			},
+			"get": {
+				"operationId": "GetMockRequestsApi",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/mock/requests/reset": {
@@ -109,32 +124,6 @@
 				},
 				"security": [],
 				"parameters": []
-			}
-		},
-		"/{serverName}/mocks": {
-			"get": {
-				"operationId": "GetMocskApi",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "serverName",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
 			}
 		},
 		"/proxy": {
