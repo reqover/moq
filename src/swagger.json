@@ -26,9 +26,9 @@
 		"securitySchemes": {}
 	},
 	"info": {
-		"title": "mock",
-		"version": "0.0.0",
-		"description": "TypeScript + Prisma + MySQL + Express API Server",
+		"title": "moq",
+		"version": "0.0.1",
+		"description": "Moq server",
 		"license": {
 			"name": "ISC"
 		},
