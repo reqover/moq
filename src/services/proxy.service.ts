@@ -129,15 +129,11 @@ export default class ProxyService {
       fs.mkdirSync(dir, { recursive: true });
     }
 
-    let fileName = `${dir}/${hash}.json`;
+    let fileName = `${dir}/${hash}.js`;
     if (fs.existsSync(fileName)) {
-      const rawData = fs.readFileSync(fileName, 'utf-8');
-      const dataFromFile = JSON.stringify(JSON.parse(rawData), null, 4);
-      if (result !== dataFromFile) {
-        fileName = `${dir}/${hash}-copy.json`;
-      }
+        fileName = `${dir}/${hash}-copy.js`;
     }
-    fs.writeFileSync(fileName, result);
+    fs.writeFileSync(fileName, `exports.mapping = ${result}`);
     logger.info(`Proxy result is saved: ${fileName}`);
     return response;
   };

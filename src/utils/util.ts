@@ -30,7 +30,7 @@ export const isObject = variable => {
 };
 
 export const getFiles = dir => {
-  return glob.sync([`${dir}/**/*.json`]);
+  return glob.sync([`${dir}/**/*.js`]);
 };
 
 export const mappingsDir = serverId => {

@@ -6,6 +6,7 @@ import { render } from '../services/template.service';
 import { logger } from '../utils/logger';
 import { getFiles, getHash, mappingsDir, matchPath, pathToFolders, randInt } from '../utils/util';
 import { _ } from 'lodash';
+import importFresh from 'import-fresh';
 
 let mockRequests = {};
 
@@ -62,28 +63,28 @@ export default class MockService {
     logger.info('========= About to find a mock ============');
     logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n
 Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
-
-    for (const file of getFiles(dir)) {
-      const rawdata = fs.readFileSync(file) as any;
-      const mock = JSON.parse(rawdata);
-
-      if (mock.request.method != method) {
+    const folders = pathToFolders(url)
+    for (const file of getFiles(join(dir, folders))) {
+      // const rawdata = fs.readFileSync(file) as any;
+      // const mock = JSON.parse(rawdata);
+      const { mapping } = await importFresh(file) as any;
+      if (mapping.request.method != method) {
         continue;
       }
 
-      const urlMatchingResult = matchPath(mock.request.url, url);
+      const urlMatchingResult = matchPath(mapping.request.url, url);
       if (!urlMatchingResult) {
         continue;
       }
 
       if (body) {
-        const isBodyMatch = await bodyMatch(serverId, body, mock.request);
+        const isBodyMatch = await bodyMatch(serverId, body, mapping.request);
         if (!isBodyMatch) {
           continue;
         }
       }
 
-      mocksForPath.push({ ...mock, params: urlMatchingResult.params });
+      mocksForPath.push({ ...mapping, params: urlMatchingResult.params });
     }
 
     // generate new ites if times is array ex [3, 5]

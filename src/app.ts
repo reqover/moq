@@ -26,7 +26,7 @@ class App {
     this.initializeRoutes(routes);
     this.initializeErrorHandling();
     RegisterRoutes(this.app);
-    this.app.use(['/docs', '/swagger'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
+    this.app.use(['/', '/docs', '/swagger'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
   }
 
   public listen() {
