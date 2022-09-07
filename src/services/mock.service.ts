@@ -9,6 +9,7 @@ import { _ } from 'lodash';
 import importFresh from 'import-fresh';
 
 let mockRequests = {};
+const scenarios = {};
 
 export default class MockService {
   public getMockRequests(): any {
@@ -88,7 +89,15 @@ Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
           continue;
         }
       }
-
+      const scenario = mapping.scenario;
+      const requiredState = scenario?.requiredState;
+      if(requiredState){
+        const scenarioState = scenarios[scenario.name]?.state;
+        if (scenarioState !== requiredState){
+          logger.info(`Mock required state <${requiredState}> but was <${scenarioState}>`)
+          continue;
+        }
+      }
       mocksForPath.push({ ...mapping, params: urlMatchingResult.params });
     }
 
@@ -113,8 +122,13 @@ Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
     const mocksForRequest = groupedMocks[requestCount] || groupedMocks[oddOrOven] || groupedMocks[0];
     if (mocksForRequest?.length > 0) {
       const mock = _.sample(mocksForRequest);
-      const statusCode = mock.response.statusCode;
 
+      const scenario = mock.scenario;
+      if(scenario?.setState) {
+        scenarios[scenario.name] = { state: scenario.setState};
+      }
+
+      const statusCode = mock.response.statusCode;
       const params = {
         url: {
           ...mock.params,
