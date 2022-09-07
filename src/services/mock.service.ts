@@ -67,8 +67,7 @@ export default class MockService {
 
     const requestCount = this.countRequest(hash);
     logger.info('========= About to find a mock ============');
-    logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n
-Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
+    logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n`);
     const folders = pathToFolders(url)
     for (const file of getFiles(join(dir, folders))) {
       // const rawdata = fs.readFileSync(file) as any;
@@ -198,7 +197,10 @@ Headers:\n\n${JSON.stringify(req.headers, null, 2)}\n`);
     logger.info(`Mock response for [${method}] ${url} (${statusCode})`);
     const scenario = mock.scenario
     if(scenario){
-      logger.info(`======= Scenario =======\n\n${JSON.stringify(scenarios[scenario.name], null, 2)}\n`)
+      logger.info(`======= Scenario =======\n\n
+${JSON.stringify(scenarios[scenario.name], null, 2)}\n
+${JSON.stringify(scenario, null, 2)}\n
+`)
     }
     logger.info(`======= Mock ${mock.id} =======\n
 ${JSON.stringify(mockResponse, null, 2)}\n`);
