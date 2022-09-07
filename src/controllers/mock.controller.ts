@@ -43,6 +43,15 @@ export class MockController extends Controller {
     }
   }
 
+  @Get('/mock/scenarios/reset')
+  public async resetMockScenariosApi(): Promise<any> {
+    try {
+      return await this.mockService.resetMockScenarios();
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
   public async downloadMocks(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const serverId = req.params.serverName || 'default';

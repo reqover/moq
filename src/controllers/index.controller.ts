@@ -1,5 +1,4 @@
-// import { NextFunction, Request, Response } from 'express';
-import { Controller, Get, Request, Res, Route, TsoaResponse } from 'tsoa';
+import { Controller, Get, Route } from 'tsoa';
 
 export interface Result {
   status: string;

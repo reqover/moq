@@ -126,6 +126,23 @@
 				"parameters": []
 			}
 		},
+		"/mock/scenarios/reset": {
+			"get": {
+				"operationId": "ResetMockScenariosApi",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/proxy": {
 			"post": {
 				"operationId": "CreateProxyApi",

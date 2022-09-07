@@ -12,6 +12,14 @@ let mockRequests = {};
 const scenarios = {};
 
 export default class MockService {
+  public resetMockScenarios(): any {
+    logger.info("About to reset mock scenarios");
+    for (const prop of Object.getOwnPropertyNames(scenarios)) {
+      delete scenarios[prop];
+    }
+    return scenarios;
+  }
+
   public getMockRequests(): any {
     return mockRequests;
   }
@@ -22,6 +30,7 @@ export default class MockService {
   }
 
   public resetMockRequests() {
+    logger.info("About to reset mock requests");
     mockRequests = {};
     return mockRequests;
   }
