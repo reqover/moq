@@ -131,7 +131,7 @@ export default class ProxyService {
 
     let fileName = `${dir}/${hash}.js`;
     if (fs.existsSync(fileName)) {
-        fileName = `${dir}/${hash}-copy.js`;
+      fileName = `${dir}/${hash}-copy.js`;
     }
     fs.writeFileSync(fileName, `exports.mapping = ${result}`);
     logger.info(`Proxy result is saved: ${fileName}`);

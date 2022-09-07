@@ -20,9 +20,9 @@ export default class MockService {
     mockRequests = { ...mockRequests, ...data };
     return mockRequests;
   }
-  
+
   public resetMockRequests() {
-    mockRequests = {}
+    mockRequests = {};
     return mockRequests;
   }
 
@@ -30,15 +30,15 @@ export default class MockService {
     const dir = mappingsDir(serverId);
     const mocks = [];
     const files = getFiles(dir);
-    for(const file of files) { 
+    for (const file of files) {
       try {
-        const { mapping } = await importFresh(file) as any;
-        const mock = JSON.stringify(mapping, null, 2)
+        const { mapping } = (await importFresh(file)) as any;
+        const mock = JSON.stringify(mapping, null, 2);
         mocks.push(mock);
       } catch (error) {
         throw Error(`Can not read file ${file}`);
       }
-    };
+    }
     return mocks;
   }
 
@@ -68,11 +68,11 @@ export default class MockService {
     const requestCount = this.countRequest(hash);
     logger.info('========= About to find a mock ============');
     logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n`);
-    const folders = pathToFolders(url)
+    const folders = pathToFolders(url);
     for (const file of getFiles(join(dir, folders))) {
       // const rawdata = fs.readFileSync(file) as any;
       // const mock = JSON.parse(rawdata);
-      const { mapping } = await importFresh(file) as any;
+      const { mapping } = (await importFresh(file)) as any;
       if (mapping.request.method != method) {
         continue;
       }
@@ -90,10 +90,10 @@ export default class MockService {
       }
       const scenario = mapping.scenario;
       const requiredState = scenario?.requiredState;
-      if(requiredState){
+      if (requiredState) {
         const scenarioState = scenarios[scenario.name]?.state;
-        if (scenarioState !== requiredState){
-          logger.info(`Mock required state <${requiredState}> but was <${scenarioState}>`)
+        if (scenarioState !== requiredState) {
+          logger.info(`Mock required state <${requiredState}> but was <${scenarioState}>`);
           continue;
         }
       }
@@ -123,8 +123,8 @@ export default class MockService {
       const mock = _.sample(mocksForRequest);
 
       const scenario = mock.scenario;
-      if(scenario?.setState) {
-        scenarios[scenario.name] = { state: scenario.setState};
+      if (scenario?.setState) {
+        scenarios[scenario.name] = { state: scenario.setState };
       }
 
       const statusCode = mock.response.statusCode;
@@ -195,12 +195,12 @@ export default class MockService {
 
   private logMockResponse = (mock, method, url, statusCode, mockResponse) => {
     logger.info(`Mock response for [${method}] ${url} (${statusCode})`);
-    const scenario = mock.scenario
-    if(scenario){
-      logger.info(`======= Scenario =======\n\n
-${JSON.stringify(scenarios[scenario.name], null, 2)}\n
-${JSON.stringify(scenario, null, 2)}\n
-`)
+    const scenario = mock.scenario;
+    if (scenario) {
+      logger.info(`======= Scenario =======\n
+Required:\n${JSON.stringify(scenario, null, 2)}\n
+Actual:\n${JSON.stringify(scenarios[scenario.name], null, 2)}\n
+`);
     }
     logger.info(`======= Mock ${mock.id} =======\n
 ${JSON.stringify(mockResponse, null, 2)}\n`);

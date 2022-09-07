@@ -27,7 +27,7 @@ export class ProxyController extends Controller {
     } catch (error) {
       next(error);
     }
-  }
+  };
 
   @Post('proxy')
   public async createProxyApi(@Body() body: { name: string; url: string }): Promise<any> {
