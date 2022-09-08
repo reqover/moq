@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import MockService from '../services/mock.service';
 import archiver from 'archiver';
 import { getFiles, mappingsDir } from '../utils/util';
-import { Body, Controller, Get, Put, Route } from 'tsoa';
+import { Body, Controller, Get, Put, Query, Route } from 'tsoa';
 
 @Route()
 export class MockController extends Controller {
@@ -38,6 +38,15 @@ export class MockController extends Controller {
   public async resetMockRequestsApi(): Promise<any> {
     try {
       return await this.mockService.resetMockRequests();
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  @Get('/mock/missing')
+  public getMissingMockRequests(@Query() serverName: string): any {
+    try {
+      return this.mockService.getMissingMockRequests(serverName);
     } catch (error) {
       return { error: error.message };
     }

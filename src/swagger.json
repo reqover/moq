@@ -126,6 +126,32 @@
 				"parameters": []
 			}
 		},
+		"/mock/missing": {
+			"get": {
+				"operationId": "GetMissingMockRequests",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "serverName",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/mock/scenarios/reset": {
 			"get": {
 				"operationId": "ResetMockScenariosApi",

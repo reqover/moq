@@ -29,8 +29,8 @@ export const isObject = variable => {
   return typeof variable === 'object' && variable !== null;
 };
 
-export const getFiles = dir => {
-  return glob.sync([`${dir}/**/*.js`]);
+export const getFiles = (dir, extention = '.js') => {
+  return glob.sync([`${dir}/**/*${extention}`]);
 };
 
 export const mappingsDir = serverId => {

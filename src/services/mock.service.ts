@@ -4,16 +4,29 @@ import fs from 'fs';
 import { join } from 'path';
 import { render } from '../services/template.service';
 import { logger } from '../utils/logger';
-import { getFiles, getHash, mappingsDir, matchPath, pathToFolders, randInt } from '../utils/util';
+import { getFiles, getHash, mappingsDir, matchPath, pathToFolders } from '../utils/util';
 import { _ } from 'lodash';
 import importFresh from 'import-fresh';
+import { MOCKS_DIR } from '../config';
 
 let mockRequests = {};
 const scenarios = {};
 
 export default class MockService {
+  public getMissingMockRequests(serverName: any): any {
+    const dir = join(MOCKS_DIR, serverName, 'missing');
+    const files = getFiles(dir, '.json');
+    const result = [];
+    for (const file of files) {
+      const raw = fs.readFileSync(file, 'utf-8');
+      const missing = JSON.parse(raw);
+      result.push(missing);
+    }
+    return result;
+  }
+
   public resetMockScenarios(): any {
-    logger.info("About to reset mock scenarios");
+    logger.info('About to reset mock scenarios');
     for (const prop of Object.getOwnPropertyNames(scenarios)) {
       delete scenarios[prop];
     }
@@ -30,7 +43,7 @@ export default class MockService {
   }
 
   public resetMockRequests() {
-    logger.info("About to reset mock requests");
+    logger.info('About to reset mock requests');
     mockRequests = {};
     return mockRequests;
   }
@@ -79,8 +92,6 @@ export default class MockService {
     logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n`);
     const folders = pathToFolders(url);
     for (const file of getFiles(join(dir, folders))) {
-      // const rawdata = fs.readFileSync(file) as any;
-      // const mock = JSON.parse(rawdata);
       const { mapping } = (await importFresh(file)) as any;
       if (mapping.request.method != method) {
         continue;
@@ -167,10 +178,6 @@ export default class MockService {
                 },
               },
             },
-          },
-          response: {
-            statusCode: null,
-            body: null,
           },
         },
         null,

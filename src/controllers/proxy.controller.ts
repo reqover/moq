@@ -1,6 +1,6 @@
 import ProxyService from '../services/proxy.service';
 import { NextFunction, Request, Response } from 'express';
-import { getHash, getProxyConfig } from '../utils/util';
+import { getProxyConfig } from '../utils/util';
 import MockService from '../services/mock.service';
 import { logger } from '../utils/logger';
 import { Body, Controller, Get, Path, Post, Put, Route } from 'tsoa';
