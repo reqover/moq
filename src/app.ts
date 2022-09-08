@@ -26,13 +26,13 @@ class App {
     this.initializeRoutes(routes);
     this.initializeErrorHandling();
     RegisterRoutes(this.app);
-    this.app.use(['/', '/docs', '/swagger'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
+    
   }
 
   public listen() {
     this.app.listen(this.port, () => {
       logger.info(`======= ENV: ${this.env} =======`);
-      logger.info(`🚀 App listening on the port ${this.port}`);
+      logger.info(`🚀 Moq listening on the port ${this.port}`);
       logger.info(`=================================`);
     });
   }
@@ -45,10 +45,11 @@ class App {
     this.app.use(morgan(LOG_FORMAT, { stream }));
     this.app.use(cors());
     this.app.use(hpp());
-    this.app.use(helmet());
+    // this.app.use(helmet());
     this.app.use(compression());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(['/', '/docs', '/swagger'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
   }
 
   private initializeRoutes(routes: Routes[]) {
