@@ -26,6 +26,8 @@ COPY --from=0 /usr/src/app/dist ./dist
 COPY --from=0 /usr/src/app/build/swagger.json ./dist/swagger.json
 
 ENV LOG_DIR=/tmp/logs
+ENV MOCKS_DIR=/tmp/mocks
+
 EXPOSE 3000
 
 CMD npm run prod
