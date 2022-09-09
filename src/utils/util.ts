@@ -4,6 +4,7 @@ import { match as pathMatcher } from 'path-to-regexp';
 import fs from 'fs';
 import md5 from 'md5';
 import { join } from 'path';
+import { logger } from './logger';
 
 /**
  * @method isEmpty
@@ -57,7 +58,8 @@ export const getProxyConfig = async (serverId: string) => {
     const config = JSON.parse(content);
     return config;
   } catch (error) {
-    throw Error(`Can not load config file ${file}`);
+    logger.error(`Can not load config file ${file}`);
+    return {}
   }
 };
 

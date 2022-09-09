@@ -92,11 +92,11 @@ export default class MockService {
     const dir = mappingsDir(serverName);
     const hash = getHash(method, url, body);
 
-    const requestCount = this.countRequest(hash);
     logger.info('========= About to find a mock ============');
     logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n`);
     const folders = pathToFolders(req.path);
-    const files =  getFiles(join(dir, folders))
+    const dirForSearch = join(dir, folders);
+    const files =  getFiles(dirForSearch);
     for (const file of files) {
       const { mapping } = (await importFresh(file)) as any;
       if (mapping.request.method != method) {
@@ -142,10 +142,12 @@ export default class MockService {
       })
       .flat();
 
+    const requestCount = this.getRequestCount(hash);
     const oddOrOven = requestCount % 2 == 0 ? 'even' : 'odd';
     const groupedMocks = this.groupByTimes(mocksForPath);
     const mocksForRequest = groupedMocks[requestCount] || groupedMocks[oddOrOven] || groupedMocks[0];
     if (mocksForRequest?.length > 0) {
+      this.countRequest(hash);
       const mock = _.sample(mocksForRequest);
 
       const scenario = mock.scenario;
@@ -202,6 +204,7 @@ export default class MockService {
       const request = { method, url, body };
       res.status(404).send({
         status: 'Mock not found',
+        sourceDir: dirForSearch,
         hash,
         requestCount,
         request,
