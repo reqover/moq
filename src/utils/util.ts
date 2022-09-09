@@ -108,10 +108,10 @@ export function pathToFolders(path: string) {
 
 export const unless = (path, middleware) => {
   return (req, res, next) => {
-    if (req.path.match(path)) {
-        return next();
-    } else {
-        return middleware(req, res, next);
-    }
+      if (req.path.match(path)) {
+          return next();
+      } else {
+          return middleware(req, res, next);
+      }
   };
 };

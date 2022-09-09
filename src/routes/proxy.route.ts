@@ -12,7 +12,7 @@ export class ProxyRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.use(unless(`/moq/*`, this.controller.proxyApi));
-    this.router.use(`/moq/:serverId/proxy`, this.controller.proxyApi);
+    this.router.use(unless('/moq/*', this.controller.proxyApi));
+    // this.router.use(`/moq/:serverId/`, this.controller.proxyApi);
   }
 }

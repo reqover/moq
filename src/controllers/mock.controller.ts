@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import MockService from '../services/mock.service';
 import archiver from 'archiver';
 import { getFiles, mappingsDir } from '../utils/util';
-import { Body, Controller, Get, Put, Query, Route } from 'tsoa';
+import { Body, Controller, Delete, Get, Put, Query, Route } from 'tsoa';
 
 @Route('moq')
 export class MockController extends Controller {
@@ -39,7 +39,7 @@ export class MockController extends Controller {
     }
   }
 
-  @Get('/requests/reset')
+  @Get('requests/reset')
   public async resetMockRequestsApi(): Promise<any> {
     try {
       return await this.mockService.resetMockRequests();
@@ -48,7 +48,7 @@ export class MockController extends Controller {
     }
   }
 
-  @Get('/missing')
+  @Get('missing')
   public getMissingMockRequests(@Query() serverName: string): any {
     try {
       return this.mockService.getMissingMockRequests(serverName);
@@ -57,7 +57,7 @@ export class MockController extends Controller {
     }
   }
 
-  @Get('/scenarios/reset')
+  @Get('scenarios/reset')
   public async resetMockScenariosApi(): Promise<any> {
     try {
       return await this.mockService.resetMockScenarios();
@@ -70,6 +70,15 @@ export class MockController extends Controller {
   public async getMockRequestsHistory(): Promise<any> {
     try {
       return await this.mockService.getHistory();
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  @Delete('history')
+  public async deleteRequestsHistory(): Promise<any> {
+    try {
+      return await this.mockService.clearHistory();
     } catch (error) {
       return { error: error.message };
     }

@@ -184,6 +184,21 @@
 				},
 				"security": [],
 				"parameters": []
+			},
+			"delete": {
+				"operationId": "DeleteRequestsHistory",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/moq/proxy": {

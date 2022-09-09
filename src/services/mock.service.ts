@@ -14,6 +14,11 @@ const scenarios = {};
 const requestHistory = [];
 
 export default class MockService {
+  public clearHistory(): any {
+    requestHistory.length = 0;
+    return requestHistory;
+  }
+
   public getMissingMockRequests(serverName: any): any {
     const dir = join(MOCKS_DIR, serverName, 'missing');
     const files = getFiles(dir, '.json');
