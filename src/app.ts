@@ -49,7 +49,7 @@ class App {
     this.app.use(compression());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
-    this.app.use(['/docs', '/swagger'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
+    this.app.use(['/moq/docs', '/moq/swagger'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
     this.app.use(express.static('vendor'));
   }
 
