@@ -40,9 +40,9 @@ export default class ProxyService {
       secure: false,
       changeOrigin: true,
       selfHandleResponse: true,
-      pathRewrite: {
-        [`^/(.*?)${PROXY_PATH}`]: '',
-      },
+      // pathRewrite: {
+      //   [`^/(.*?)${PROXY_PATH}`]: '',
+      // },
       onProxyReq: this.proxyReq(config),
       onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req: any, res) => {
         return this.proxyRes(responseBuffer, proxyRes, req, res);
@@ -87,7 +87,7 @@ export default class ProxyService {
   };
 
   private proxyRes = (responseBuffer, proxyRes, req, res) => {
-    const serverId = req.params.serverId || 'default';
+    const serverId = req.params.serverId || '';
     const requestUrl = req.url;
     const requestMethod = req.method;
     const requestBody = req.body;
