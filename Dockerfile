@@ -18,6 +18,8 @@ ENV NODE_ENV production
 WORKDIR /usr/src/app
 
 COPY package.json ./
+COPY vendor ./vendor
+COPY views ./views
 
 RUN npm install --only=prod
 RUN npm install -g cross-env
