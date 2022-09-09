@@ -35,6 +35,30 @@ export function RegisterRoutes(app: express.Router) {
     // ###########################################################################################################
         app.get('/status',
             ...(fetchMiddlewares<RequestHandler>(IndexController)),
+            ...(fetchMiddlewares<RequestHandler>(IndexController.prototype.status)),
+
+            function IndexController_status(request: any, response: any, next: any) {
+            const args = {
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new IndexController();
+
+
+              const promise = controller.status.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/',
+            ...(fetchMiddlewares<RequestHandler>(IndexController)),
             ...(fetchMiddlewares<RequestHandler>(IndexController.prototype.index)),
 
             function IndexController_index(request: any, response: any, next: any) {
