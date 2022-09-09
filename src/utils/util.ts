@@ -34,6 +34,9 @@ export const getFiles = (dir, extention = '.js') => {
 };
 
 export const mappingsDir = serverId => {
+  if (!serverId) {
+    return MOCKS_DIR;
+  }
   return `${MOCKS_DIR}/${serverId}/mappings`;
 };
 
