@@ -21,7 +21,8 @@ class App {
     this.app = express();
     this.env = NODE_ENV || 'development';
     this.port = PORT || 3000;
-
+    this.app.set('view engine', 'ejs');
+    
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
     this.initializeErrorHandling();
@@ -49,6 +50,7 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(['/docs', '/swagger'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
+    this.app.use(express.static('vendor'));
   }
 
   private initializeRoutes(routes: Routes[]) {

@@ -6,7 +6,12 @@ import { Body, Controller, Get, Put, Query, Route } from 'tsoa';
 
 @Route()
 export class MockController extends Controller {
+  
   public mockService = new MockService();
+
+  public showHistory = async (req: Request, res: Response): Promise<void> => {   
+    res.render('history', { history: this.mockService.getHistory() });
+  };
 
   public mockApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {

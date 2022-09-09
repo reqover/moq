@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <title>Reqover</title>
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <span class="navbar-brand mb-0 h1">Reqover</span>
+            </div>
+        </nav>
+        <div class="container mt-3 mb-3">
+            <div class="row">
+                <div class="col">
+                    <div class="d-flex align-items-start">
+                        <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        </div>
+                        <div class="tab-content w-100" id="v-pills-tabContent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script src="../js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="../js/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+        <script>
+        $(document).ready(function () {
+            getHistory();
+        });
+
+
+        function getHistory(){
+                var token = $("#token").data('token')
+                $.ajax({
+                    type: 'GET',
+                    url: '/mock/history',
+                    success: function (data) {
+                        data.forEach((element, i) => {
+                            var activeClass = ''
+                            if(i == 0) {
+                                activeClass = 'active'
+                            } else {
+                                activeClass = ''
+                            }
+                            $("#v-pills-tab").append(`
+                            <button class="nav-link ${activeClass}" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-${i}" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">${element.request.method} ${element.request.url}</button>
+                            `);
+                            $("#v-pills-tabContent").append(`
+                            <div class="tab-pane fade show ${activeClass}" id="v-pills-${i}" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                                <div class="row row-cols-1 row-cols-md-2 g-4">
+                                    <div class="col">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Request:
+                                    </div>
+                                    <div class="card-body">
+                                        <div>${element.request.method} ${element.request.url}</div>
+                                        <pre class='mt-2'>${JSON.stringify(element.request.body, null , 2)}</pre>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="col">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Response:
+                                    </div>
+                                    <div class="card-body">
+                                        <div>Status code: ${element.response?.statusCode || null}</div>
+                                        <div class='mt-2'>Body:</div>
+                                        <pre class='mt-2'>${JSON.stringify(element.response?.body, null, 2) || null}</pre>
+                                    </div>
+                                </div>
+                                </div>
+                                </div>
+                            </div>
+                            `);
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        $('#validationFeedback').text(xhr.responseJSON.error);
+                        $('#validationFeedback').show();
+                    },
+                });
+            }
+        </script>
+    </body>
+</html>

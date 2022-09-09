@@ -164,7 +164,7 @@ export default class MockService {
 
       const mockResponse = await render(mock.response.body, params);
       this.logMockResponse(mock, method, url, statusCode, mockResponse);
-      this.addToHistory({method, url, body}, {...{ statusCode }, ...mockResponse });
+      this.addToHistory({method, url, body}, {statusCode, body: mockResponse });
       res.status(mock.response.statusCode).send(mockResponse);
     } else {
       this.addToHistory({method, url, body}, null);
