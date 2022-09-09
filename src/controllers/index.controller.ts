@@ -5,7 +5,7 @@ export interface Result {
   message: string;
 }
 
-@Route('moq')
+@Route('__admin')
 export class IndexController extends Controller {
   @Get('status')
   public async status(): Promise<Result> {

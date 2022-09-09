@@ -5,7 +5,7 @@ import MockService from '../services/mock.service';
 import { logger } from '../utils/logger';
 import { Body, Controller, Get, Post, Put, Query, Route } from 'tsoa';
 
-@Route('moq')
+@Route('__admin')
 export class ProxyController extends Controller {
   public proxyService = new ProxyService();
   public mockService = new MockService();

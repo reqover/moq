@@ -10,3 +10,4 @@ export const PORT = process.env.PORT || 3000;
 export const LOG_DIR = process.env.LOG_DIR || join(dirname(require.main.filename), '..', 'logs');
 export const LOG_FORMAT = 'combined';
 export const PROXY_PATH = process.env.PROXY_PATH || '/proxy';
+export const ADMIN_PATH = '__admin'

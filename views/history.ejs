@@ -4,7 +4,7 @@
         <!-- Required meta tags -->
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link href="../moq/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="../__admin/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <title>Moq</title>
     </head>
 
@@ -13,8 +13,8 @@
             <div class="container">
                 <span class="navbar-brand mb-0 h1">Moq</span>
                 <div class="navbar-nav">
-                    <a class="nav-link" href="/moq/swagger">Docs</a>
-                    <a class="nav-link" href="/moq/files">View files</a>      
+                    <a class="nav-link" href="/__admin/swagger">Docs</a>
+                    <a class="nav-link" href="/__admin/files">View files</a>      
                 </div>
             </div>
         </nav>
@@ -36,8 +36,8 @@
             </div>
         </div>
         
-        <script src="../moq/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="../moq/js/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+        <script src="../__admin/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="../__admin/js/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
         <script>
         $(document).ready(function () {
             getHistory();
@@ -46,7 +46,7 @@
                 e.preventDefault();
                 $.ajax({
                     type: 'DELETE',
-                    url: `/moq/history`,
+                    url: `/__admin/history`,
                     success: function (data) {
                         window.location.reload();
                     },
@@ -63,7 +63,7 @@
                 var token = $("#token").data('token')
                 $.ajax({
                     type: 'GET',
-                    url: '/moq/history',
+                    url: '/__admin/history',
                     success: function (data) {
                         data.forEach((element, i) => {
                             var activeClass = ''

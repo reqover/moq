@@ -1,10 +1,9 @@
 import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
-import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
-import { NODE_ENV, PORT, LOG_FORMAT } from './config';
+import { NODE_ENV, PORT, LOG_FORMAT, ADMIN_PATH } from './config';
 import { Routes } from './interfaces/routes.interface';
 import errorMiddleware from './middlewares/error.middleware';
 import { RegisterRoutes } from './routes/routes';
@@ -49,7 +48,7 @@ class App {
     this.app.use(compression());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
-    this.app.use(['/moq/docs', '/moq/swagger'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
+    this.app.use('/__admin/docs', swaggerUI.serve, swaggerUI.setup(swaggerJson));
     this.app.use(express.static('vendor'));
   }
 

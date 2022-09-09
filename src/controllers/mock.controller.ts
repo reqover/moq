@@ -4,7 +4,7 @@ import archiver from 'archiver';
 import { getFiles, mappingsDir } from '../utils/util';
 import { Body, Controller, Delete, Get, Put, Query, Route } from 'tsoa';
 
-@Route('moq')
+@Route('__admin')
 export class MockController extends Controller {
   
   public mockService = new MockService();
