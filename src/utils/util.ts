@@ -103,3 +103,13 @@ export function omitMetaProps(obj, ...props) {
 export function pathToFolders(path: string) {
   return join(...path.split('/'));
 }
+
+export const unless = (path, middleware) => {
+  return (req, res, next) => {
+    if (req.path.match(path)) {
+        return next();
+    } else {
+        return middleware(req, res, next);
+    }
+  };
+};

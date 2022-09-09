@@ -3,9 +3,9 @@ import { NextFunction, Request, Response } from 'express';
 import { getProxyConfig } from '../utils/util';
 import MockService from '../services/mock.service';
 import { logger } from '../utils/logger';
-import { Body, Controller, Get, Post, Put, Route } from 'tsoa';
+import { Body, Controller, Get, Post, Put, Query, Route } from 'tsoa';
 
-@Route()
+@Route('moq')
 export class ProxyController extends Controller {
   public proxyService = new ProxyService();
   public mockService = new MockService();
@@ -34,13 +34,13 @@ export class ProxyController extends Controller {
     const serverName = body.name;
     const url = body.url;
     const result = await this.proxyService.createProxy(serverName, url);
-    const proxyPath = `/${serverName}/moq`;
+    const proxyPath = `/moq/${serverName}/proxy`;
     return { ...result, proxyPath };
   }
 
-  @Put('/{serverName}/config')
+  @Put('config')
   public async recordingApi(
-    serverName: string,
+    @Query() serverName: string = '',
     @Body()
     body: {
       serverUrl: string;
@@ -58,8 +58,8 @@ export class ProxyController extends Controller {
     }
   }
 
-  @Get('/{serverName}/config')
-  public async getConfigApi(serverName: string): Promise<any> {
+  @Get('config')
+  public async getConfigApi(@Query() serverName: string = ''): Promise<any> {
     try {
       const config = await getProxyConfig(serverName);
       return config;

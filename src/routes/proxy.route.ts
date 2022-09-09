@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { Routes } from '../interfaces/routes.interface';
 import { ProxyController } from '../controllers/proxy.controller';
-import { PROXY_PATH } from '../config';
+import { unless } from '../utils/util';
 
 export class ProxyRoute implements Routes {
   public router = Router();
@@ -12,7 +12,7 @@ export class ProxyRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.use(`/`, this.controller.proxyApi);
-    this.router.use(`/:serverId${PROXY_PATH}`, this.controller.proxyApi);
+    this.router.use(unless(`/moq/*`, this.controller.proxyApi));
+    this.router.use(`/moq/:serverId/proxy`, this.controller.proxyApi);
   }
 }

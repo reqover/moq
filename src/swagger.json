@@ -36,7 +36,7 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/status": {
+		"/moq/status": {
 			"get": {
 				"operationId": "Status",
 				"responses": {
@@ -55,7 +55,7 @@
 				"parameters": []
 			}
 		},
-		"/mock/requests": {
+		"/moq/requests": {
 			"put": {
 				"operationId": "UpadateMockRequestsApi",
 				"responses": {
@@ -109,7 +109,7 @@
 				"parameters": []
 			}
 		},
-		"/mock/requests/reset": {
+		"/moq/requests/reset": {
 			"get": {
 				"operationId": "ResetMockRequestsApi",
 				"responses": {
@@ -126,7 +126,7 @@
 				"parameters": []
 			}
 		},
-		"/mock/missing": {
+		"/moq/missing": {
 			"get": {
 				"operationId": "GetMissingMockRequests",
 				"responses": {
@@ -152,7 +152,7 @@
 				]
 			}
 		},
-		"/mock/scenarios/reset": {
+		"/moq/scenarios/reset": {
 			"get": {
 				"operationId": "ResetMockScenariosApi",
 				"responses": {
@@ -169,7 +169,7 @@
 				"parameters": []
 			}
 		},
-		"/mock/history": {
+		"/moq/history": {
 			"get": {
 				"operationId": "GetMockRequestsHistory",
 				"responses": {
@@ -186,7 +186,7 @@
 				"parameters": []
 			}
 		},
-		"/proxy": {
+		"/moq/proxy": {
 			"post": {
 				"operationId": "CreateProxyApi",
 				"responses": {
@@ -225,7 +225,7 @@
 				}
 			}
 		},
-		"/{serverName}/config": {
+		"/moq/config": {
 			"put": {
 				"operationId": "RecordingApi",
 				"responses": {
@@ -241,10 +241,11 @@
 				"security": [],
 				"parameters": [
 					{
-						"in": "path",
+						"in": "query",
 						"name": "serverName",
-						"required": true,
+						"required": false,
 						"schema": {
+							"default": "",
 							"type": "string"
 						}
 					}
@@ -302,10 +303,11 @@
 				"security": [],
 				"parameters": [
 					{
-						"in": "path",
+						"in": "query",
 						"name": "serverName",
-						"required": true,
+						"required": false,
 						"schema": {
+							"default": "",
 							"type": "string"
 						}
 					}

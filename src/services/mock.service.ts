@@ -84,18 +84,18 @@ export default class MockService {
   };
 
   public findMock = async (req: Request, res: Response) => {
-    const serverId = req.params.serverId || '';
+    const serverName = req.params.serverName || '';
     const url = req.url;
     const method = req.method;
     const body = req.body;
     let mocksForPath = [];
-    const dir = mappingsDir(serverId);
+    const dir = mappingsDir(serverName);
     const hash = getHash(method, url, body);
 
     const requestCount = this.countRequest(hash);
     logger.info('========= About to find a mock ============');
     logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n`);
-    const folders = pathToFolders(url);
+    const folders = pathToFolders(req.path);
     const files =  getFiles(join(dir, folders))
     for (const file of files) {
       const { mapping } = (await importFresh(file)) as any;
@@ -109,7 +109,7 @@ export default class MockService {
       }
 
       if (body) {
-        const isBodyMatch = await bodyMatch(serverId, body, mapping.request);
+        const isBodyMatch = await bodyMatch(serverName, body, mapping.request);
         if (!isBodyMatch) {
           continue;
         }

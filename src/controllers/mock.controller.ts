@@ -4,7 +4,7 @@ import archiver from 'archiver';
 import { getFiles, mappingsDir } from '../utils/util';
 import { Body, Controller, Get, Put, Query, Route } from 'tsoa';
 
-@Route()
+@Route('moq')
 export class MockController extends Controller {
   
   public mockService = new MockService();
@@ -21,7 +21,7 @@ export class MockController extends Controller {
     }
   };
 
-  @Put('/mock/requests')
+  @Put('requests')
   public async upadateMockRequestsApi(@Body() body: { hash: 1 }): Promise<any> {
     try {
       return await this.mockService.updateMockRequests(body);
@@ -30,7 +30,7 @@ export class MockController extends Controller {
     }
   }
 
-  @Get('/mock/requests')
+  @Get('requests')
   public async getMockRequestsApi(): Promise<any> {
     try {
       return await this.mockService.getMockRequests();
@@ -39,7 +39,7 @@ export class MockController extends Controller {
     }
   }
 
-  @Get('/mock/requests/reset')
+  @Get('/requests/reset')
   public async resetMockRequestsApi(): Promise<any> {
     try {
       return await this.mockService.resetMockRequests();
@@ -48,7 +48,7 @@ export class MockController extends Controller {
     }
   }
 
-  @Get('/mock/missing')
+  @Get('/missing')
   public getMissingMockRequests(@Query() serverName: string): any {
     try {
       return this.mockService.getMissingMockRequests(serverName);
@@ -57,7 +57,7 @@ export class MockController extends Controller {
     }
   }
 
-  @Get('/mock/scenarios/reset')
+  @Get('/scenarios/reset')
   public async resetMockScenariosApi(): Promise<any> {
     try {
       return await this.mockService.resetMockScenarios();
@@ -66,7 +66,7 @@ export class MockController extends Controller {
     }
   }
 
-  @Get('/mock/history')
+  @Get('history')
   public async getMockRequestsHistory(): Promise<any> {
     try {
       return await this.mockService.getHistory();
@@ -77,7 +77,8 @@ export class MockController extends Controller {
 
   public async downloadMocks(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const serverId = req.params.serverName || 'default';
+      const serverName = req.query.serverName || '';
+      const zipName = `${serverName}_files`
       const archive = archiver('zip');
 
       archive.on('error', function (err) {
@@ -90,12 +91,12 @@ export class MockController extends Controller {
       });
 
       //set the archive name
-      res.attachment(`${serverId}.zip`);
+      res.attachment(`${zipName}.zip`);
 
       //this is the streaming magic
       archive.pipe(res);
 
-      const dir = mappingsDir(serverId);
+      const dir = mappingsDir(serverName);
 
       const files = getFiles(dir);
 

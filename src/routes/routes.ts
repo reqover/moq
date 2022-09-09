@@ -33,7 +33,7 @@ export function RegisterRoutes(app: express.Router) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
-        app.get('/status',
+        app.get('/moq/status',
             ...(fetchMiddlewares<RequestHandler>(IndexController)),
             ...(fetchMiddlewares<RequestHandler>(IndexController.prototype.status)),
 
@@ -57,7 +57,7 @@ export function RegisterRoutes(app: express.Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.put('/mock/requests',
+        app.put('/moq/requests',
             ...(fetchMiddlewares<RequestHandler>(MockController)),
             ...(fetchMiddlewares<RequestHandler>(MockController.prototype.upadateMockRequestsApi)),
 
@@ -82,7 +82,7 @@ export function RegisterRoutes(app: express.Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/mock/requests',
+        app.get('/moq/requests',
             ...(fetchMiddlewares<RequestHandler>(MockController)),
             ...(fetchMiddlewares<RequestHandler>(MockController.prototype.getMockRequestsApi)),
 
@@ -106,7 +106,7 @@ export function RegisterRoutes(app: express.Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/mock/requests/reset',
+        app.get('/moq/requests/reset',
             ...(fetchMiddlewares<RequestHandler>(MockController)),
             ...(fetchMiddlewares<RequestHandler>(MockController.prototype.resetMockRequestsApi)),
 
@@ -130,7 +130,7 @@ export function RegisterRoutes(app: express.Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/mock/missing',
+        app.get('/moq/missing',
             ...(fetchMiddlewares<RequestHandler>(MockController)),
             ...(fetchMiddlewares<RequestHandler>(MockController.prototype.getMissingMockRequests)),
 
@@ -155,7 +155,7 @@ export function RegisterRoutes(app: express.Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/mock/scenarios/reset',
+        app.get('/moq/scenarios/reset',
             ...(fetchMiddlewares<RequestHandler>(MockController)),
             ...(fetchMiddlewares<RequestHandler>(MockController.prototype.resetMockScenariosApi)),
 
@@ -179,7 +179,7 @@ export function RegisterRoutes(app: express.Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/mock/history',
+        app.get('/moq/history',
             ...(fetchMiddlewares<RequestHandler>(MockController)),
             ...(fetchMiddlewares<RequestHandler>(MockController.prototype.getMockRequestsHistory)),
 
@@ -203,7 +203,7 @@ export function RegisterRoutes(app: express.Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/proxy',
+        app.post('/moq/proxy',
             ...(fetchMiddlewares<RequestHandler>(ProxyController)),
             ...(fetchMiddlewares<RequestHandler>(ProxyController.prototype.createProxyApi)),
 
@@ -228,13 +228,13 @@ export function RegisterRoutes(app: express.Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.put('/:serverName/config',
+        app.put('/moq/config',
             ...(fetchMiddlewares<RequestHandler>(ProxyController)),
             ...(fetchMiddlewares<RequestHandler>(ProxyController.prototype.recordingApi)),
 
             function ProxyController_recordingApi(request: any, response: any, next: any) {
             const args = {
-                    serverName: {"in":"path","name":"serverName","required":true,"dataType":"string"},
+                    serverName: {"default":"","in":"query","name":"serverName","dataType":"string"},
                     body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"proxy":{"dataType":"nestedObjectLiteral","nestedProperties":{"omitHeaders":{"dataType":"array","array":{"dataType":"string"},"required":true},"enabled":{"dataType":"boolean","required":true}},"required":true},"serverUrl":{"dataType":"string","required":true}}},
             };
 
@@ -254,13 +254,13 @@ export function RegisterRoutes(app: express.Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/:serverName/config',
+        app.get('/moq/config',
             ...(fetchMiddlewares<RequestHandler>(ProxyController)),
             ...(fetchMiddlewares<RequestHandler>(ProxyController.prototype.getConfigApi)),
 
             function ProxyController_getConfigApi(request: any, response: any, next: any) {
             const args = {
-                    serverName: {"in":"path","name":"serverName","required":true,"dataType":"string"},
+                    serverName: {"default":"","in":"query","name":"serverName","dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

@@ -5,7 +5,7 @@ export interface Result {
   message: string;
 }
 
-@Route('/')
+@Route('moq')
 export class IndexController extends Controller {
   @Get('status')
   public async status(): Promise<Result> {

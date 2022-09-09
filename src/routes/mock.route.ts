@@ -13,9 +13,8 @@ export class MockRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.use('/:serverId/mock', this.controller.mockApi);
-    this.router.use('/files', express.static(MOCKS_DIR), serveIndex(MOCKS_DIR, { icons: true }));
-    this.router.get('/:serverName/download', this.controller.downloadMocks);
-    this.router.get('/history', this.controller.showHistory);
+    this.router.use('/moq/files', express.static(MOCKS_DIR), serveIndex(MOCKS_DIR, { icons: true }));
+    this.router.get('/moq/download', this.controller.downloadMocks);
+    this.router.get('/moq/history', this.controller.showHistory);
   }
 }
