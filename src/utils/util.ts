@@ -34,10 +34,7 @@ export const getFiles = (dir, extention = '.js') => {
 };
 
 export const mappingsDir = serverId => {
-  if (!serverId) {
-    return MOCKS_DIR;
-  }
-  return `${MOCKS_DIR}/${serverId}/mappings`;
+  return join(MOCKS_DIR, serverId, "mappings");
 };
 
 export const proxyRootDir = serverId => {
@@ -54,7 +51,7 @@ export const randInt = (from: number, to: number) => {
 };
 
 export const getProxyConfig = async (serverId: string) => {
-  const file = `${MOCKS_DIR}/${serverId}/config.json`;
+  const file = join(MOCKS_DIR, serverId, "config.json");
   try {
     const content = fs.readFileSync(file, 'utf8');
     const config = JSON.parse(content);

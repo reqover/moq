@@ -12,6 +12,7 @@ export class ProxyRoute implements Routes {
   }
 
   private initializeRoutes() {
+    this.router.use(`/`, this.controller.proxyApi);
     this.router.use(`/:serverId${PROXY_PATH}`, this.controller.proxyApi);
   }
 }

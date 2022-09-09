@@ -84,7 +84,7 @@ export default class MockService {
   };
 
   public findMock = async (req: Request, res: Response) => {
-    const serverId = req.params.serverId || 'default';
+    const serverId = req.params.serverId || '';
     const url = req.url;
     const method = req.method;
     const body = req.body;
@@ -96,7 +96,8 @@ export default class MockService {
     logger.info('========= About to find a mock ============');
     logger.info(`[${method}] ${url}\n\n${JSON.stringify(body, null, 2)}\n`);
     const folders = pathToFolders(url);
-    for (const file of getFiles(join(dir, folders))) {
+    const files =  getFiles(join(dir, folders))
+    for (const file of files) {
       const { mapping } = (await importFresh(file)) as any;
       if (mapping.request.method != method) {
         continue;

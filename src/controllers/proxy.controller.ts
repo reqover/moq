@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { getProxyConfig } from '../utils/util';
 import MockService from '../services/mock.service';
 import { logger } from '../utils/logger';
-import { Body, Controller, Get, Path, Post, Put, Route } from 'tsoa';
+import { Body, Controller, Get, Post, Put, Route } from 'tsoa';
 
 @Route()
 export class ProxyController extends Controller {
@@ -13,7 +13,7 @@ export class ProxyController extends Controller {
   public proxyApi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     logger.info(`Request [${req.method}] ${req.url}`);
     try {
-      const serverId = req.params.serverId;
+      const serverId = req.params.serverId || '';
       const config = await getProxyConfig(serverId);
       const url = req.url;
       const proxyConfig = config.proxy;
