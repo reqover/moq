@@ -11,6 +11,7 @@ import { MOCKS_DIR } from '../config';
 
 let mockRequests = {};
 const scenarios = {};
+const requestHistory = [];
 
 export default class MockService {
   public getMissingMockRequests(serverName: any): any {
@@ -46,6 +47,10 @@ export default class MockService {
     logger.info('About to reset mock requests');
     mockRequests = {};
     return mockRequests;
+  }
+
+  public getHistory() {
+    return requestHistory;
   }
 
   public async getMocks(serverId: string) {
@@ -159,8 +164,10 @@ export default class MockService {
 
       const mockResponse = await render(mock.response.body, params);
       this.logMockResponse(mock, method, url, statusCode, mockResponse);
+      this.addToHistory({method, url, body}, {...{ statusCode }, ...mockResponse });
       res.status(mock.response.statusCode).send(mockResponse);
     } else {
+      this.addToHistory({method, url, body}, null);
       logger.info(`Mock is NOT FOUND for ${method} ${url}\n\n${JSON.stringify(body, null, 2)}\n`);
       const folders = pathToFolders(req.path);
       const unmatchedDir = join(dir, '..', 'missing', folders);
@@ -200,6 +207,13 @@ export default class MockService {
       });
     }
   };
+
+  private addToHistory = (request, response) => {
+    requestHistory.unshift({
+      request,
+      response
+    })
+  }
 
   private groupByTimes = mocks => {
     const groupData = _.groupBy(mocks, item => {

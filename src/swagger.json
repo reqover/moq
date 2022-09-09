@@ -188,6 +188,23 @@
 				"parameters": []
 			}
 		},
+		"/mock/history": {
+			"get": {
+				"operationId": "GetMockRequestsHistory",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/proxy": {
 			"post": {
 				"operationId": "CreateProxyApi",
